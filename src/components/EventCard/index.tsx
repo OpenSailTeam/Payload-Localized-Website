@@ -4,13 +4,13 @@ import useClickableCard from '@/utilities/useClickableCard'
 import Link from 'next/link'
 import React, { Fragment } from 'react'
 
-import type { Post } from '@/payload-types'
+import type { Event } from '@/payload-types'
 
 import { Media } from '@/components/Media'
 
 import { ArchiveCardProps } from '../ArchiveRegistry'
 
-export const Card: React.FC<ArchiveCardProps<Post>> = (props) => {
+export const EventCard: React.FC<ArchiveCardProps<Event>> = (props) => {
   const { card, link } = useClickableCard({})
   const { className, doc, relationTo, showCategories, title: titleFromProps } = props
 

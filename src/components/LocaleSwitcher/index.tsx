@@ -94,7 +94,7 @@ export function LocaleSwitcher({ className }: LocaleSwitcherProps) {
     <Select onValueChange={onSelectChange} value={locale}>
       <SelectTrigger 
         className={cn(
-          "w-auto p-0 pl-0 text-sm font-medium text-black bg-transparent border-none md:ml-9 dark:text-white",
+          "w-auto p-0 pl-0 text-sm font-medium text-foreground bg-transparent border-none md:ml-9",
           className
         )}
       >

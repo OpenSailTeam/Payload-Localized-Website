@@ -8,69 +8,47 @@ import RichText from '@/components/RichText'
 import { CollectionArchive } from '@/components/CollectionArchive'
 import { TypedLocale } from 'payload'
 
-export const ArchiveBlock: React.FC<
-  ArchiveBlockProps & {
-    id?: string
-    locale: TypedLocale
-  }
-> = async (props) => {
-  const {
-    id,
-    categories,
-    introContent,
-    limit: limitFromProps,
-    populateBy,
-    selectedDocs,
-    locale,
-  } = props
+// src/blocks/ArchiveBlock/Component.tsx
+export const ArchiveBlock: React.FC<ArchiveBlockProps & { locale: TypedLocale }> = async ({
+  id, populateBy, relationTo, selectedDocs, categories, limit: limitProp, locale, introContent,
+}) => {
+  const limit = limitProp || 3;
+  let docs: any[] = [];
 
-  const limit = limitFromProps || 3
-
-  let posts: Post[] = []
-
-  if (populateBy === 'collection') {
-    const payload = await getPayload({ config: configPromise })
-
-    const flattenedCategories = categories?.map((category) => {
-      if (typeof category === 'object') return category.id
-      else return category
-    })
-
-    const fetchedPosts = await payload.find({
-      collection: 'posts',
+  if (populateBy === 'collection' && relationTo) {
+    const payload = await getPayload({ config: configPromise });
+    const criteria = categories?.length
+      ? { where: { categories: { in: categories.map(c => typeof c === 'object' ? c.id : c) } } }
+      : {};
+    const result = await payload.find({
+      collection: relationTo,
       depth: 1,
       locale,
       limit,
-      ...(flattenedCategories && flattenedCategories.length > 0
-        ? {
-            where: {
-              categories: {
-                in: flattenedCategories,
-              },
-            },
-          }
-        : {}),
-    })
+      ...criteria,
+    });
+    docs = result.docs;
+  } else if (selectedDocs?.length) {
+    docs = selectedDocs.map(d => typeof d.value === 'object' ? d.value : null).filter(Boolean);
+  }
 
-    posts = fetchedPosts.docs
-  } else {
-    if (selectedDocs?.length) {
-      const filteredSelectedPosts = selectedDocs.map((post) => {
-        if (typeof post.value === 'object') return post.value
-      }) as Post[]
-
-      posts = filteredSelectedPosts
-    }
+  if (!relationTo) {
+    // you could throw, log, or simply return null/placeholder
+    return (
+      <div className="my-16">
+        <p>Please pick a collection in the block settings.</p>
+      </div>
+    )
   }
 
   return (
-    <div className="my-16" id={`block-${id}`}>
+    <div id={`block-${id}`} className="my-16">
       {introContent && (
         <div className="container mb-16">
-          <RichText className="ml-0 max-w-[48rem]" content={introContent} enableGutter={false} />
+          <RichText content={introContent} enableGutter={false} />
         </div>
       )}
-      <CollectionArchive posts={posts} />
+      <CollectionArchive docs={docs} relationTo={relationTo} />
     </div>
-  )
-}
+  );
+};

@@ -24,7 +24,7 @@ export const HeaderNav: React.FC<{ header: HeaderType }> = ({ header }) => {
       <ThemeSelector />
       <Link href="/search">
         <span className="sr-only">{t('search')}</span>
-        <SearchIcon className="w-5 text-primary" />
+        <SearchIcon className="w-5 text-foreground" />
       </Link>
     </nav>
   )

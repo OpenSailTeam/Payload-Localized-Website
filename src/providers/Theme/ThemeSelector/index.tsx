@@ -44,7 +44,7 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className }) => {
     <Select onValueChange={onThemeChange} value={value}>
     <SelectTrigger 
       className={cn(
-        "w-auto p-0 pl-0 text-sm font-medium text-black bg-transparent border-none dark:text-white",
+        "w-auto p-0 pl-0 text-sm font-medium text-foreground bg-transparent border-none",
         className
       )}
     >
