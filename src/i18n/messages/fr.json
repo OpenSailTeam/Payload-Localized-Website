@@ -1,0 +1,19 @@
+{
+  "date-published": "Date de publication",
+  "author": "Écrivain",
+  "page-not-found": "Cette page n'a pas été trouvée.",
+  "go-home": "Aller à la page d'accueil",
+  "loading": "Chargement en cours, veuillez patienter...",
+  "posts": "articles",
+  "post": "article",
+  "showing": "Affichage",
+  "of": "de",
+  "search": "Nous achetons",
+  "dashboard": "Tableau de bord",
+  "previous": "Antérieur",
+  "next": "Suivant",
+  "more-pages": "Plus de pages",
+  "auto": "Automatique",
+  "light": "Ouvrir",
+  "dark": "Sombre"
+}

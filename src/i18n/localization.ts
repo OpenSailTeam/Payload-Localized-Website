@@ -11,8 +11,8 @@ const localization = {
       label: 'English',
     },
     {
-      code: 'tr',
-      label: 'Türkçe',
+      code: 'fr',
+      label: 'Français',
     },
     // {
     //   code: 'es',

@@ -123,8 +123,8 @@ export const seed = async ({
   await payload.update({
     collection: 'media',
     id: image1Doc.id,
-    data: image1('tr'),
-    locale: 'tr',
+    data: image1('fr'),
+    locale: 'fr',
     filePath: path.resolve(dirname, 'image-post1.webp'),
     req,
   })
@@ -139,8 +139,8 @@ export const seed = async ({
   await payload.update({
     collection: 'media',
     id: image2Doc.id,
-    data: image2('tr'),
-    locale: 'tr',
+    data: image2('fr'),
+    locale: 'fr',
     filePath: path.resolve(dirname, 'image-post2.webp'),
     req,
   })
@@ -155,8 +155,8 @@ export const seed = async ({
   await payload.update({
     collection: 'media',
     id: image3Doc.id,
-    data: image2('tr'),
-    locale: 'tr',
+    data: image2('fr'),
+    locale: 'fr',
     filePath: path.resolve(dirname, 'image-post3.webp'),
     req,
   })
@@ -171,8 +171,8 @@ export const seed = async ({
   await payload.update({
     collection: 'media',
     id: imageHomeDoc.id,
-    data: image2('tr'),
-    locale: 'tr',
+    data: image2('fr'),
+    locale: 'fr',
     filePath: path.resolve(dirname, 'image-hero1.webp'),
     req,
   })
@@ -204,9 +204,9 @@ export const seed = async ({
   await payload.update({
     collection: 'categories',
     id: technologyCategory.id,
-    locale: 'tr',
+    locale: 'fr',
     data: {
-      title: 'Teknoloji',
+      title: 'Technologie',
     },
     req,
   })
@@ -222,9 +222,9 @@ export const seed = async ({
   await payload.update({
     collection: 'categories',
     id: newsCategory.id,
-    locale: 'tr',
+    locale: 'fr',
     data: {
-      title: 'Haberler',
+      title: 'Nouvelles',
     },
     req,
   })
@@ -240,9 +240,9 @@ export const seed = async ({
   await payload.update({
     collection: 'categories',
     id: financeCategory.id,
-    locale: 'tr',
+    locale: 'fr',
     data: {
-      title: 'Finans',
+      title: 'Finance',
     },
     req,
   })
@@ -258,9 +258,9 @@ export const seed = async ({
   await payload.update({
     collection: 'categories',
     id: designCategory.id,
-    locale: 'tr',
+    locale: 'fr',
     data: {
-      title: 'Tasarım',
+      title: 'Conception',
     },
     req,
   })
@@ -276,9 +276,9 @@ export const seed = async ({
   await payload.update({
     collection: 'categories',
     id: softwareCategory.id,
-    locale: 'tr',
+    locale: 'fr',
     data: {
-      title: 'Yazılım',
+      title: 'Logiciel',
     },
     req,
   })
@@ -294,9 +294,9 @@ export const seed = async ({
   await payload.update({
     collection: 'categories',
     id: engineeringCategory.id,
-    locale: 'tr',
+    locale: 'fr',
     data: {
-      title: 'Mühendislik',
+      title: 'Ingénierie',
     },
     req,
   })
@@ -327,7 +327,7 @@ export const seed = async ({
         .replace(/"\{\{IMAGE_2\}\}"/g, String(image2ID))
         .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID)),
     ),
-    locale: 'tr',
+    locale: 'fr',
     req,
   })
 
@@ -351,7 +351,7 @@ export const seed = async ({
         .replace(/"\{\{IMAGE_2\}\}"/g, String(image3ID))
         .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID)),
     ),
-    locale: 'tr',
+    locale: 'fr',
     req,
   })
 
@@ -375,7 +375,7 @@ export const seed = async ({
         .replace(/"\{\{IMAGE_2\}\}"/g, String(image1ID))
         .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID)),
     ),
-    locale: 'tr',
+    locale: 'fr',
     req,
   })
 
@@ -422,9 +422,9 @@ export const seed = async ({
   await payload.update({
     collection: 'pages',
     id: homePage.id,
-    locale: 'tr',
+    locale: 'fr',
     data: JSON.parse(
-      JSON.stringify(home('tr'))
+      JSON.stringify(home('fr'))
         .replace(/"\{\{IMAGE_1\}\}"/g, String(imageHomeID))
         .replace(/"\{\{IMAGE_2\}\}"/g, String(image2ID)),
     ),
@@ -440,11 +440,11 @@ export const seed = async ({
     req,
   })
 
-  const contactFormData_es = JSON.parse(JSON.stringify(contactFormData('tr')))
+  const contactFormData_es = JSON.parse(JSON.stringify(contactFormData('fr')))
   await payload.update({
     collection: 'forms',
     id: contactForm.id,
-    locale: 'tr',
+    locale: 'fr',
     data: {
       redirect: contactFormData_es.redirect,
       title: contactFormData_es.title,
@@ -488,9 +488,9 @@ export const seed = async ({
   await payload.update({
     collection: 'pages',
     id: contactPage.id,
-    locale: 'tr',
+    locale: 'fr',
     data: JSON.parse(
-      JSON.stringify(contactPageData('tr')).replace(
+      JSON.stringify(contactPageData('fr')).replace(
         /"\{\{CONTACT_FORM_ID\}\}"/g,
         String(contactFormID),
       ),
@@ -531,7 +531,7 @@ export const seed = async ({
 
   await payload.updateGlobal({
     slug: 'header',
-    locale: 'tr',
+    locale: 'fr',
     data: {
       navItems: [
         {
@@ -539,7 +539,7 @@ export const seed = async ({
           link: {
             type: 'custom',
             url: '/',
-            label: 'Anasayfa',
+            label: 'Maison',
           },
         },
         {
@@ -550,7 +550,7 @@ export const seed = async ({
               relationTo: 'pages',
               value: contactPage.id,
             },
-            label: 'İletişim',
+            label: 'Contact',
           },
         },
       ],
@@ -594,7 +594,7 @@ export const seed = async ({
   })
   await payload.updateGlobal({
     slug: 'footer',
-    locale: 'tr',
+    locale: 'fr',
     data: {
       navItems: [
         {
@@ -602,7 +602,7 @@ export const seed = async ({
           link: {
             type: 'custom',
             url: '/admin',
-            label: 'Panel',
+            label: 'Admin',
           },
         },
         {
@@ -610,7 +610,7 @@ export const seed = async ({
           link: {
             type: 'custom',
             url: 'https://github.com/payloadcms/payload/tree/beta/templates/website',
-            label: 'Kaynak Kod',
+            label: 'Code source',
           },
         },
         {

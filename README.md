@@ -15,7 +15,7 @@ It is a modified version of the [Payload CMS Localization Example](https://githu
 ## Seed
 
 To seed the database with a few pages and posts you can click the 'seed database' link from the admin panel.
-The seed contains English and Turkish pages and posts. 
+The seed contains English and French pages and posts. 
 
 ## Add Locale
 

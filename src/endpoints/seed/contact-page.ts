@@ -1,6 +1,6 @@
 import type { Page } from '@/payload-types'
 
-export const contact = (locale: 'en' | 'tr'): Partial<Page> => ({
+export const contact = (locale: 'en' | 'fr'): Partial<Page> => ({
   slug: 'contact',
   slugLock: false,
   _status: 'published',
@@ -29,7 +29,7 @@ export const contact = (locale: 'en' | 'tr'): Partial<Page> => ({
                   text:
                     locale === 'en'
                       ? 'Contact form:'
-                      : 'İletişim formu:',
+                      : 'Formulaire de contact :',
                   version: 1,
                 },
               ],
@@ -48,5 +48,5 @@ export const contact = (locale: 'en' | 'tr'): Partial<Page> => ({
       },
     },
   ],
-  title: locale === 'en' ? 'Contact' : 'İletişim',
+  title: locale === 'en' ? 'Contact' : 'Contact',
 })

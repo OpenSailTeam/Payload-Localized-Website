@@ -1,10 +1,10 @@
 import type { Media } from '@/payload-types'
 
-export const image1 = (locale: 'en' | 'tr'): Omit<Media, 'createdAt' | 'id' | 'updatedAt'> => ({
+export const image1 = (locale: 'en' | 'fr'): Omit<Media, 'createdAt' | 'id' | 'updatedAt'> => ({
   alt:
     locale === 'en'
       ? 'Curving abstract shapes with an orange and blue gradient'
-      : 'Turuncu ve mavi gradyanla eğimli soyut şekiller',
+      : 'Formes abstraites courbes avec un dégradé orange et bleu',
   caption: {
     root: {
       type: 'root',
@@ -18,7 +18,7 @@ export const image1 = (locale: 'en' | 'tr'): Omit<Media, 'createdAt' | 'id' | 'u
               format: 0,
               mode: 'normal',
               style: '',
-              text: locale === 'en' ? 'Photo by ' : 'Fotoğrafcı: ',
+              text: locale === 'en' ? 'Photo by ' : 'Photo de ',
               version: 1,
             },
             {
@@ -50,7 +50,7 @@ export const image1 = (locale: 'en' | 'tr'): Omit<Media, 'createdAt' | 'id' | 'u
               format: 0,
               mode: 'normal',
               style: '',
-              text: locale === 'en' ? ' on Unsplash.' : 'Unsplashda.',
+              text: locale === 'en' ? ' on Unsplash.' : ' sur Unsplash.',
               version: 1,
             },
           ],

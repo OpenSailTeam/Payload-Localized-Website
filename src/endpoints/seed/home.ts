@@ -1,6 +1,6 @@
 import type { RequiredDataFromCollectionSlug } from 'payload'
 
-export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages'> => ({
+export const home = (locale: 'en' | 'fr'): RequiredDataFromCollectionSlug<'pages'> => ({
   slug: 'home',
   slugLock: false,
   _status: 'published',
@@ -11,7 +11,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
         link: {
           type: 'custom',
           appearance: 'default',
-          label: locale === 'en' ? 'All posts' : 'Tüm Yazılar',
+          label: locale === 'en' ? 'All posts' : 'Tous les messages',
           url: '/posts',
         },
       },
@@ -19,7 +19,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
         link: {
           type: 'custom',
           appearance: 'outline',
-          label: locale === 'en' ? 'Contact' : 'İletişim',
+          label: locale === 'en' ? 'Contact' : 'Contact',
           url: '/contact',
         },
       },
@@ -42,7 +42,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                 text:
                   locale === 'en'
                     ? 'Payload Website Template'
-                    : 'Payload Website Teması',
+                    : 'Modèle de site Web Payload',
                 version: 1,
               },
             ],
@@ -67,7 +67,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                     text:
                       locale === 'en'
                         ? 'Visit the admin dashboard'
-                        : 'Yönetici paneline git',
+                        : `Visitez le tableau de bord d'administration`,
                     version: 1,
                   },
                 ],
@@ -90,7 +90,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                 text:
                   locale === 'en'
                     ? " to begin managing this site's content. The code for this template is completely open-source and can be found "
-                    : ' Bu sitenin içeriğini yönetmeye başlamak için. Bu şablonun kodu tamamen açık kaynaklıdır ve şu adreste bulunabilir: ',
+                    : ' pour commencer à gérer le contenu de ce site. Le code de ce modèle est entièrement open source et est disponible ',
                 version: 1,
               },
               {
@@ -102,7 +102,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                     format: 0,
                     mode: 'normal',
                     style: '',
-                    text: locale === 'en' ? 'here' : 'burada',
+                    text: locale === 'en' ? 'here' : 'ici',
                     version: 1,
                   },
                 ],
@@ -159,7 +159,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                       format: 0,
                       mode: 'normal',
                       style: '',
-                      text: locale === 'en' ? 'Core features' : 'Temel Özellikler',
+                      text: locale === 'en' ? 'Core features' : 'Fonctionnalités principales',
                       version: 1,
                     },
                   ],
@@ -193,7 +193,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                       format: 0,
                       mode: 'normal',
                       style: '',
-                      text: locale === 'en' ? 'Admin Dashboard' : 'Yönetici Paneli',
+                      text: locale === 'en' ? 'Admin Dashboard' : `Tableau de bord d'administration`,
                       version: 1,
                     },
                   ],
@@ -215,7 +215,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                       text:
                         locale === 'en'
                           ? "Manage this site's pages and posts from the "
-                          : 'Bu sitenin sayfalarını ve gönderilerini ',
+                          : 'Gérez les pages et les articles de ce site depuis le ',
                       version: 1,
                     },
                     {
@@ -227,7 +227,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                           format: 0,
                           mode: 'normal',
                           style: '',
-                          text: locale === 'en' ? 'admin dashboard' : 'yönetici panelinden yönetin',
+                          text: locale === 'en' ? 'admin dashboard' : `tableau de bord d'administration`,
                           version: 1,
                         },
                       ],
@@ -281,7 +281,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                       format: 0,
                       mode: 'normal',
                       style: '',
-                      text: locale === 'en' ? 'Preview' : 'Önizleme',
+                      text: locale === 'en' ? 'Preview' : 'Aperçu',
                       version: 1,
                     },
                   ],
@@ -303,7 +303,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                       text:
                         locale === 'en'
                           ? 'Using versions, drafts, and preview, editors can review and share their changes before publishing them.'
-                          : 'Sürümler, taslaklar ve önizleme kullanarak editörler, değişikliklerini yayımlamadan önce gözden geçirebilir ve paylaşabilir.',
+                          : 'À l’aide de versions, de brouillons et d’aperçus, les éditeurs peuvent examiner et partager leurs modifications avant de les publier.',
                       version: 1,
                     },
                   ],
@@ -337,7 +337,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                       format: 0,
                       mode: 'normal',
                       style: '',
-                      text: locale === 'en' ? 'Page Builder' : 'Sayfa Oluşturucu',
+                      text: locale === 'en' ? 'Page Builder' : 'Générateur de pages',
                       version: 1,
                     },
                   ],
@@ -359,7 +359,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                       text:
                         locale === 'en'
                           ? 'Custom page builder allows you to create unique page, post, and project layouts for any type of content.'
-                          : 'Özel sayfa oluşturucu, her tür içerik için benzersiz sayfa, gönderi ve proje düzenleri oluşturmanıza olanak tanır.',
+                          : 'Le générateur de pages personnalisé vous permet de créer des mises en page de page, de publication et de projet uniques pour tout type de contenu.',
                       version: 1,
                     },
                   ],
@@ -415,7 +415,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                       text:
                         locale === 'en'
                           ? 'Editors have complete control over SEO data and site content directly from the '
-                          : 'Editörler, SEO verileri ve site içeriği üzerinde tam kontrole sahiptir, ',
+                          : 'Les éditeurs ont un contrôle total sur les données SEO et le contenu du site directement depuis le ',
                       version: 1,
                     },
                     {
@@ -427,7 +427,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                           format: 0,
                           mode: 'normal',
                           style: '',
-                          text: locale === 'en' ? 'admin dashboard' : 'yönetici panelinden doğrudan yönetebilirler',
+                          text: locale === 'en' ? 'admin dashboard' : `tableau de bord d'administration`,
                           version: 1,
                         },
                       ],
@@ -481,7 +481,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                       format: 0,
                       mode: 'normal',
                       style: '',
-                      text: locale === 'en' ? 'Dark Mode' : 'Koyu Mod',
+                      text: locale === 'en' ? 'Dark Mode' : 'Mode sombre',
                       version: 1,
                     },
                   ],
@@ -503,7 +503,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                       text:
                         locale === 'en'
                           ? 'Users will experience this site in their preferred color scheme and each block can be inverted.'
-                          : 'Kullanıcılar bu siteyi tercih ettikleri renk şemasında deneyimleyecek ve her blok ters çevrilebilir.',
+                          : 'Les utilisateurs découvriront ce site dans leur palette de couleurs préférée et chaque bloc peut être inversé.',
                       version: 1,
                     },
                   ],
@@ -548,7 +548,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                   format: 0,
                   mode: 'normal',
                   style: '',
-                  text: locale === 'en' ? 'Recent posts' : 'Son Yazılar',
+                  text: locale === 'en' ? 'Recent posts' : 'Messages récents',
                   version: 1,
                 },
               ],
@@ -570,7 +570,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                   text:
                     locale === 'en'
                       ? 'The posts below are displayed in an "Archive" layout building block which is an extremely powerful way to display documents on a page. It can be auto-populated by collection or by category, or posts can be individually selected. Pagination controls will automatically appear if the number of results exceeds the number of items per page.'
-                      : 'Aşağıdaki gönderiler, sayfada belgeleri görüntülemenin son derece güçlü bir yolu olan "Arşiv" düzenleme bloğunda görüntülenmektedir. Bu blok, koleksiyon veya kategoriye göre otomatik olarak doldurulabilir ya da gönderiler tek tek seçilebilir. Sayfa başına öğe sayısını aşan sonuçlar olduğunda, sayfalama kontrolleri otomatik olarak görünür.',
+                      : `Les articles ci-dessous sont affichés dans un bloc de mise en page « Archives », un moyen extrêmement puissant d'afficher des documents sur une page. Ce bloc peut être rempli automatiquement par collection ou par catégorie, ou les articles peuvent être sélectionnés individuellement. Des contrôles de pagination s'affichent automatiquement si le nombre de résultats dépasse le nombre d'éléments par page.`,
                   version: 1,
                 },
               ],
@@ -598,7 +598,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
           link: {
             type: 'custom',
             appearance: 'default',
-            label: locale === 'en' ? 'All posts' : 'Tüm Yazılar',
+            label: locale === 'en' ? 'All posts' : 'Tous les messages',
             url: '/posts',
           },
         },
@@ -617,7 +617,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                   mode: 'normal',
                   style: '',
                   text:
-                    locale === 'en' ? 'This is a call to action' : 'Bu bir eylem çağrısıdır.',
+                    locale === 'en' ? 'This is a call to action' : `Ceci est un appel à l'action`,
                   version: 1,
                 },
               ],
@@ -639,7 +639,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                   text:
                     locale === 'en'
                       ? 'This is a custom layout building block '
-                      : 'Bu, özel düzen oluşturma bloğudur ',
+                      : `Il s'agit d'un bloc de construction de mise en page personnalisé `,
                   version: 1,
                 },
                 {
@@ -654,7 +654,7 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
                       text:
                         locale === 'en'
                           ? 'configured in the admin dashboard'
-                          : 'yönetici panelinde yapılandırılmıştır',
+                          : `configuré dans le tableau de bord d'administration`,
                       version: 1,
                     },
                   ],
@@ -697,10 +697,10 @@ export const home = (locale: 'en' | 'tr'): RequiredDataFromCollectionSlug<'pages
     description:
       locale === 'en'
         ? 'An open-source website built with Payload and Next.js.'
-        : 'Payload ve Next.js ile oluşturulmuş açık kaynaklı bir web sitesi.',
+        : 'Un site Web open source construit avec Payload et Next.js.',
     // @ts-ignore
     image: '{{IMAGE_1}}',
-    title: locale === 'en' ? 'Payload Website Template' : 'Payload Website Teması',
+    title: locale === 'en' ? 'Payload Website Template' : 'Modèle de site Web Payload',
   },
-  title: locale === 'en' ? 'Home' : 'Anasayfa',
+  title: locale === 'en' ? 'Home' : 'Maison',
 })

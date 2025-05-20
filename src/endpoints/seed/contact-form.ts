@@ -1,6 +1,6 @@
 import type { Form } from '@/payload-types'
 
-export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
+export const contactForm = (locale: 'en' | 'fr'): Partial<Form> => ({
   confirmationMessage: {
     root: {
       type: 'root',
@@ -17,7 +17,7 @@ export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
               text:
                 locale === 'en'
                   ? 'The contact form has been submitted successfully.'
-                  : 'İletişim formu başarıyla gönderildi.',
+                  : 'Le formulaire de contact a été soumis avec succès.',
               version: 1,
             },
           ],
@@ -40,7 +40,7 @@ export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
     {
       emailFrom: '"Contact Form" \u003Cform@yourdomain.com\u003E',
       emailTo: '{{email}}',
-      replyTo: '"Tarik Kavaz" \u003Chello@yourdomain.com\u003E',
+      replyTo: '"PGA of Canada" \u003Chello@yourdomain.com\u003E',
       bcc: '"Contact Form" \u003Chello@yourdomain.com\u003E',
       message: {
         root: {
@@ -58,7 +58,7 @@ export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
                   text:
                     locale === 'en'
                       ? 'Your contact form submission was successfully received.\n\n{{full-name}} - {{email}} - {{phone}}\n\n{{message}}'
-                      : 'İletişim formu gönderiminiz başarıyla alındı.\n\n{{full-name}} - {{email}} - {{phone}}\n\n{{message}}',
+                      : 'Votre formulaire de contact a été reçu avec succès.\n\n{{full-name}} - {{email}} - {{phone}}\n\n{{message}}',
                   version: 1,
                 },
               ],
@@ -75,7 +75,7 @@ export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
           version: 1,
         },
       },
-      subject: locale === 'en' ? "You've received a new message." : 'Yeni bir mesaj aldınız.',
+      subject: locale === 'en' ? "You've received a new message." : 'Vous avez reçu un nouveau message.',
     },
   ],
   fields: [
@@ -83,7 +83,7 @@ export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
       name: 'full-name',
       blockName: 'full-name',
       blockType: 'text',
-      label: locale === 'en' ? 'Full Name' : 'İsim Soyisim',
+      label: locale === 'en' ? 'Full Name' : 'Nom et prénom',
       required: true,
       width: 100,
     },
@@ -99,7 +99,7 @@ export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
       name: 'phone',
       blockName: 'phone',
       blockType: 'number',
-      label: locale === 'en' ? 'Phone' : 'Telefon',
+      label: locale === 'en' ? 'Phone' : 'Téléphone',
       required: false,
       width: 100,
     },
@@ -107,13 +107,13 @@ export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
       name: 'message',
       blockName: 'message',
       blockType: 'textarea',
-      label: locale === 'en' ? 'Message' : 'Mesaj',
+      label: locale === 'en' ? 'Message' : 'Message',
       required: true,
       width: 100,
     },
   ],
   redirect: undefined,
-  submitButtonLabel: locale === 'en' ? 'Submit' : 'Gönder',
-  title: locale === 'en' ? 'Contact Form' : 'İletişim Formu',
+  submitButtonLabel: locale === 'en' ? 'Submit' : 'Soumettre',
+  title: locale === 'en' ? 'Contact Form' : 'Formulaire de contact',
   updatedAt: '2023-01-12T21:47:41.374Z',
 })
