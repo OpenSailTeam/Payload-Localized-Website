@@ -20,7 +20,7 @@ export const CollectionArchive = <S extends CollectionSlug>({
             <CardComponent
               doc={doc}
               relationTo={relationTo}
-              showCategories
+              //showCategories
             />
           </div>
         ))}

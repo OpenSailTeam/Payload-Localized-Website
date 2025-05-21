@@ -14,6 +14,7 @@ export interface Config {
     pages: Page;
     posts: Post;
     events: Event;
+    zones: Zone;
     media: Media;
     categories: Category;
     users: User;
@@ -30,6 +31,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
+    zones: ZonesSelect<false> | ZonesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -124,7 +126,7 @@ export interface Page {
       | null;
     media?: (string | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (BannerBlock | CodeBlock | MediaBlock | CallToActionBlock | ContentBlock | ArchiveBlock | FormBlock)[];
   meta?: {
     title?: string | null;
     /**
@@ -173,6 +175,53 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BannerBlock".
+ */
+export interface BannerBlock {
+  style: 'info' | 'warning' | 'error' | 'success';
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'banner';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CodeBlock".
+ */
+export interface CodeBlock {
+  language?: ('typescript' | 'javascript' | 'css') | null;
+  code: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'code';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaBlock".
+ */
+export interface MediaBlock {
+  position?: ('default' | 'fullscreen') | null;
+  media: string | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mediaBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -264,17 +313,6 @@ export interface ContentBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "MediaBlock".
- */
-export interface MediaBlock {
-  position?: ('default' | 'fullscreen') | null;
-  media: string | Media;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'mediaBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ArchiveBlock".
  */
 export interface ArchiveBlock {
@@ -294,7 +332,7 @@ export interface ArchiveBlock {
     [k: string]: unknown;
   } | null;
   populateBy?: ('collection' | 'selection') | null;
-  relationTo?: ('posts' | 'events') | null;
+  relationTo?: ('posts' | 'events' | 'zones') | null;
   categories?: (string | Category)[] | null;
   limit?: number | null;
   selectedDocs?:
@@ -306,6 +344,10 @@ export interface ArchiveBlock {
         | {
             relationTo: 'events';
             value: string | Event;
+          }
+        | {
+            relationTo: 'zones';
+            value: string | Zone;
           }
       )[]
     | null;
@@ -356,6 +398,7 @@ export interface Post {
   };
   relatedPosts?: (string | Post)[] | null;
   categories?: (string | Category)[] | null;
+  zone?: (string | null) | Zone;
   meta?: {
     title?: string | null;
     /**
@@ -372,6 +415,44 @@ export interface Post {
         name?: string | null;
       }[]
     | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "zones".
+ */
+export interface Zone {
+  id: string;
+  title: string;
+  logo?: (string | null) | Media;
+  region?: string | null;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
+  };
   slug?: string | null;
   slugLock?: boolean | null;
   updatedAt: string;
@@ -421,8 +502,10 @@ export interface Event {
   startDate: string;
   endDate?: string | null;
   location: string;
+  golfCourse: string;
   relatedEvents?: (string | Event)[] | null;
   categories?: (string | Category)[] | null;
+  zone?: (string | null) | Zone;
   meta?: {
     title?: string | null;
     /**
@@ -431,6 +514,7 @@ export interface Event {
     image?: (string | null) | Media;
     description?: string | null;
   };
+  publishedAt?: string | null;
   organizers?: (string | User)[] | null;
   populatedOrganizers?:
     | {
@@ -667,6 +751,10 @@ export interface Redirect {
       | ({
           relationTo: 'events';
           value: string | Event;
+        } | null)
+      | ({
+          relationTo: 'zones';
+          value: string | Zone;
         } | null);
     url?: string | null;
   };
@@ -708,6 +796,10 @@ export interface Search {
     | {
         relationTo: 'events';
         value: string | Event;
+      }
+    | {
+        relationTo: 'zones';
+        value: string | Zone;
       };
   slug?: string | null;
   meta?: {
@@ -743,6 +835,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'events';
         value: string | Event;
+      } | null)
+    | ({
+        relationTo: 'zones';
+        value: string | Zone;
       } | null)
     | ({
         relationTo: 'media';
@@ -845,9 +941,11 @@ export interface PagesSelect<T extends boolean = true> {
   layout?:
     | T
     | {
+        banner?: T | BannerBlockSelect<T>;
+        code?: T | CodeBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
-        mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
       };
@@ -864,6 +962,36 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BannerBlock_select".
+ */
+export interface BannerBlockSelect<T extends boolean = true> {
+  style?: T;
+  content?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CodeBlock_select".
+ */
+export interface CodeBlockSelect<T extends boolean = true> {
+  language?: T;
+  code?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaBlock_select".
+ */
+export interface MediaBlockSelect<T extends boolean = true> {
+  position?: T;
+  media?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -917,16 +1045,6 @@ export interface ContentBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "MediaBlock_select".
- */
-export interface MediaBlockSelect<T extends boolean = true> {
-  position?: T;
-  media?: T;
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ArchiveBlock_select".
  */
 export interface ArchiveBlockSelect<T extends boolean = true> {
@@ -959,6 +1077,7 @@ export interface PostsSelect<T extends boolean = true> {
   content?: T;
   relatedPosts?: T;
   categories?: T;
+  zone?: T;
   meta?:
     | T
     | {
@@ -990,8 +1109,10 @@ export interface EventsSelect<T extends boolean = true> {
   startDate?: T;
   endDate?: T;
   location?: T;
+  golfCourse?: T;
   relatedEvents?: T;
   categories?: T;
+  zone?: T;
   meta?:
     | T
     | {
@@ -999,12 +1120,35 @@ export interface EventsSelect<T extends boolean = true> {
         image?: T;
         description?: T;
       };
+  publishedAt?: T;
   organizers?: T;
   populatedOrganizers?:
     | T
     | {
         id?: T;
         name?: T;
+      };
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "zones_select".
+ */
+export interface ZonesSelect<T extends boolean = true> {
+  title?: T;
+  logo?: T;
+  region?: T;
+  content?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
       };
   slug?: T;
   slugLock?: T;
@@ -1380,42 +1524,6 @@ export interface FooterSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "BannerBlock".
- */
-export interface BannerBlock {
-  style: 'info' | 'warning' | 'error' | 'success';
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'banner';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CodeBlock".
- */
-export interface CodeBlock {
-  language?: ('typescript' | 'javascript' | 'css') | null;
-  code: string;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'code';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

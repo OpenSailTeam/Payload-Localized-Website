@@ -22,7 +22,7 @@ export const ArchiveBlock: React.FC<ArchiveBlockProps & { locale: TypedLocale }>
       : {};
     const result = await payload.find({
       collection: relationTo,
-      depth: 1,
+      depth: 2,
       locale,
       limit,
       ...criteria,

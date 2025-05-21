@@ -11,9 +11,6 @@ import {
 
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
-import { Banner } from '../../blocks/Banner/config'
-import { Code } from '../../blocks/Code/config'
-import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
 import { revalidatePost } from './hooks/revalidatePost'
@@ -26,6 +23,13 @@ import {
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
 import { slugField } from '@/fields/slug'
+import { CallToAction } from '@/blocks/CallToAction/config'
+import { Content } from '@/blocks/Content/config'
+import { Archive } from '@/blocks/ArchiveBlock/config'
+import { FormBlock } from '@/blocks/Form/config'
+import { Banner } from '../../blocks/Banner/config'
+import { Code } from '../../blocks/Code/config'
+import { MediaBlock } from '../../blocks/MediaBlock/config'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
@@ -80,7 +84,7 @@ export const Posts: CollectionConfig = {
                   return [
                     ...rootFeatures,
                     HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-                    BlocksFeature({ blocks: [Banner, Code, MediaBlock] }),
+                    BlocksFeature({ blocks: [Banner, Code, MediaBlock, CallToAction, Content, Archive, FormBlock] }),
                     FixedToolbarFeature(),
                     InlineToolbarFeature(),
                     HorizontalRuleFeature(),
@@ -119,6 +123,15 @@ export const Posts: CollectionConfig = {
               },
               hasMany: true,
               relationTo: 'categories',
+            },
+            {
+              name: 'zone',
+              type: 'relationship',
+              admin: {
+                position: 'sidebar',
+              },
+              hasMany: false,
+              relationTo: 'zones',
             },
           ],
           label: 'Meta',

@@ -27,7 +27,7 @@ export const PageRange: React.FC<{
       {typeof totalDocs !== 'undefined' &&
         totalDocs > 0 &&
         `${t('showing')} ${indexStart}${indexStart > 0 ? ` - ${indexEnd}` : ''} ${t('of')} ${totalDocs} ${
-          totalDocs > 1 ? t('posts').toLowerCase() : t('post').toLowerCase()
+          totalDocs > 1 ? t('items').toLowerCase() : t('item').toLowerCase()
         }`}
     </div>
   )

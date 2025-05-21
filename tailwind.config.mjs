@@ -122,7 +122,21 @@ export default {
   					height: '0'
   				}
   			}
-  		}
-  	}
+  		},
+      typography: ({ theme }) => ({
+        DEFAULT: {
+          css: {
+            '--tw-prose-body': 'var(--primary)',
+            '--tw-prose-headings': 'var(--primary)',
+            '--tw-prose-links': 'var(--primary-foreground)',
+            h1: {
+              fontSize: '4rem',
+              fontWeight: 'normal',
+              marginBottom: '0.25em',
+            },
+          },
+        },
+      }),
+  	},
   },
 }

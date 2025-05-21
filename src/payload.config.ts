@@ -25,6 +25,7 @@ import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Events } from './collections/Events'
+import { Zones } from './collections/Zones'
 import Users from './collections/Users'
 import { seedHandler } from './endpoints/seedHandler'
 import { Footer } from './globals/Footer/config'
@@ -96,7 +97,7 @@ export default buildConfig({
         BoldFeature(),
         ItalicFeature(),
         LinkFeature({
-          enabledCollections: ['pages', 'posts', 'events'],
+          enabledCollections: ['pages', 'posts', 'events', 'zones'],
           fields: ({ defaultFields }) => {
             const defaultFieldsWithoutUrl = defaultFields.filter((field) => {
               if ('name' in field && field.name === 'url') return false
@@ -123,7 +124,7 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  collections: [Pages, Posts, Events, Media, Categories, Users],
+  collections: [Pages, Posts, Events, Zones, Media, Categories, Users],
   cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   endpoints: [
@@ -138,7 +139,7 @@ export default buildConfig({
   globals: [Header, Footer],
   plugins: [
     redirectsPlugin({
-      collections: ['pages', 'posts', 'events'],
+      collections: ['pages', 'posts', 'events', 'zones'],
       overrides: {
         // @ts-expect-error
         fields: ({ defaultFields }) => {
@@ -193,7 +194,7 @@ export default buildConfig({
       },
     }),
     searchPlugin({
-      collections: ['posts', 'events'],
+      collections: ['posts', 'events', 'zones'],
       beforeSync: beforeSyncWithSearch,
       searchOverrides: {
         fields: ({ defaultFields }) => {

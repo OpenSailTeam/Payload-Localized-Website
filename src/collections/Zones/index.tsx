@@ -12,8 +12,6 @@ import {
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
-import { populateOrganizers } from './hooks/populateOrganizers'
-import { revalidateEvent } from './hooks/revalidateEvent'
 
 import { CallToAction } from '@/blocks/CallToAction/config'
 import { Content } from '@/blocks/Content/config'
@@ -32,8 +30,8 @@ import {
 } from '@payloadcms/plugin-seo/fields'
 import { slugField } from '@/fields/slug'
 
-export const Events: CollectionConfig = {
-  slug: 'events',
+export const Zones: CollectionConfig = {
+  slug: 'zones',
   access: {
     create: authenticated,
     delete: authenticated,
@@ -41,12 +39,12 @@ export const Events: CollectionConfig = {
     update: authenticated,
   },
   admin: {
-    defaultColumns: ['title', 'startDate', 'location', 'updatedAt'],
+    defaultColumns: ['title', 'updatedAt'],
     livePreview: {
       url: ({ data, locale }) => {
         const path = generatePreviewPath({
           slug: typeof data?.slug === 'string' ? data.slug : '',
-          collection: 'events',
+          collection: 'zones',
           locale: locale.code,
         })
         return `${process.env.NEXT_PUBLIC_SERVER_URL}${path}`
@@ -55,7 +53,7 @@ export const Events: CollectionConfig = {
     preview: (data, { locale }) => {
       const path = generatePreviewPath({
         slug: typeof data?.slug === 'string' ? data.slug : '',
-        collection: 'events',
+        collection: 'zones',
         locale,
       })
       return `${process.env.NEXT_PUBLIC_SERVER_URL}${path}`
@@ -76,7 +74,19 @@ export const Events: CollectionConfig = {
           label: 'Content',
           fields: [
             {
-              name: 'description',
+              name: 'logo',
+              type: 'upload',
+              relationTo: 'media',
+              admin: { position: 'sidebar' },
+            },
+            {
+              name: 'region',
+              type: 'text',
+              localized: true,
+              admin: { position: 'sidebar' },
+            },
+            {
+              name: 'content',
               type: 'richText',
               localized: true,
               required: true,
@@ -95,66 +105,6 @@ export const Events: CollectionConfig = {
           ],
         },
         {
-          label: 'Meta',
-          fields: [
-            {
-              name: 'startDate',
-              type: 'date',
-              required: true,
-              admin: {
-                date: { pickerAppearance: 'dayAndTime' },
-                position: 'sidebar',
-              },
-            },
-            {
-              name: 'endDate',
-              type: 'date',
-              admin: {
-                date: { pickerAppearance: 'dayAndTime' },
-                position: 'sidebar',
-              },
-            },
-            {
-              name: 'location',
-              type: 'text',
-              localized: true,
-              required: true,
-              admin: { position: 'sidebar' },
-            },
-                        {
-              name: 'golfCourse',
-              type: 'text',
-              localized: true,
-              required: true,
-              admin: { position: 'sidebar' },
-            },
-            {
-              name: 'relatedEvents',
-              type: 'relationship',
-              relationTo: 'events',
-              hasMany: true,
-              admin: { position: 'sidebar' },
-              filterOptions: ({ id }) => ({ id: { not_in: [id] } }),
-            },
-            {
-              name: 'categories',
-              type: 'relationship',
-              relationTo: 'categories',
-              hasMany: true,
-              admin: { position: 'sidebar' },
-            },
-            {
-              name: 'zone',
-              type: 'relationship',
-              admin: {
-                position: 'sidebar',
-              },
-              hasMany: false,
-              relationTo: 'zones',
-            },
-          ],
-        },
-        {
           name: 'meta',
           label: 'SEO',
           fields: [
@@ -163,11 +113,19 @@ export const Events: CollectionConfig = {
               descriptionPath: 'meta.description',
               imagePath: 'meta.image',
             }),
-            MetaTitleField({ hasGenerateFn: true }),
-            MetaImageField({ relationTo: 'media' }),
+            MetaTitleField({
+              hasGenerateFn: true,
+            }),
+            MetaImageField({
+              relationTo: 'media',
+            }),
+
             MetaDescriptionField({}),
             PreviewField({
+              // if the `generateUrl` function is configured
               hasGenerateFn: true,
+
+              // field paths to match the target field for data
               titlePath: 'meta.title',
               descriptionPath: 'meta.description',
             }),
@@ -175,49 +133,8 @@ export const Events: CollectionConfig = {
         },
       ],
     },
-    {
-      name: 'publishedAt',
-      type: 'date',
-      admin: {
-        date: {
-          pickerAppearance: 'dayAndTime',
-        },
-        position: 'sidebar',
-      },
-      hooks: {
-        beforeChange: [
-          ({ siblingData, value }) => {
-            if (siblingData._status === 'published' && !value) {
-              return new Date()
-            }
-            return value
-          },
-        ],
-      },
-    },
-    {
-      name: 'organizers',
-      type: 'relationship',
-      relationTo: 'users',
-      hasMany: true,
-      admin: { position: 'sidebar' },
-    },
-    {
-      name: 'populatedOrganizers',
-      type: 'array',
-      access: { update: () => false },
-      admin: { disabled: true, readOnly: true },
-      fields: [
-        { name: 'id', type: 'text' },
-        { name: 'name', type: 'text' },
-      ],
-    },
     ...slugField('title', { slugOverrides: { localized: true } }),
   ],
-  hooks: {
-    afterRead: [populateOrganizers],
-    afterChange: [revalidateEvent],
-  },
   versions: {
     drafts: {
       autosave: { interval: 100 },
