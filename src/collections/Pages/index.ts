@@ -2,11 +2,13 @@ import type { CollectionConfig, TypedLocale } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
+import { Banner } from '../../blocks/Banner/config'
 import { Archive } from '../../blocks/ArchiveBlock/config'
 import { CallToAction } from '../../blocks/CallToAction/config'
 import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { MultiBlock } from '../../blocks/MultiBlock/config'
 import { hero } from '@/heros/config'
 import { slugField } from '@/fields/slug'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -20,7 +22,6 @@ import {
   OverviewField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
-import { Banner } from '@/blocks/Banner/config'
 import { Code } from '@/blocks/Code/config'
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -74,8 +75,9 @@ export const Pages: CollectionConfig = {
               name: 'layout',
               type: 'blocks',
               localized: true,
-              blocks: [Banner, Code, MediaBlock, CallToAction, Content, Archive, FormBlock],
+              blocks: [Banner, Code, MediaBlock, CallToAction, Content, Archive, FormBlock, MultiBlock],
               required: true,
+              defaultValue: [],
             },
           ],
           label: 'Content',
@@ -124,9 +126,7 @@ export const Pages: CollectionConfig = {
   },
   versions: {
     drafts: {
-      autosave: {
-        interval: 100, // We set this interval for optimal live preview
-      },
+      autosave: false,
     },
     maxPerDoc: 50,
   },

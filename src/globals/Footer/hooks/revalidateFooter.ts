@@ -1,8 +1,8 @@
 import type { GlobalAfterChangeHook } from 'payload'
 
-import { revalidateTag } from 'next/cache'
+export const revalidateFooter: GlobalAfterChangeHook = async ({ doc, req: { payload } }) => {
+  const { revalidateTag } = await import('next/cache')
 
-export const revalidateFooter: GlobalAfterChangeHook = ({ doc, req: { payload } }) => {
   payload.logger.info(`Revalidating footer`)
 
   revalidateTag('global_footer')

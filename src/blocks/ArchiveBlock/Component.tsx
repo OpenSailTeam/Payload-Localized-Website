@@ -32,6 +32,8 @@ export const ArchiveBlock: React.FC<ArchiveBlockProps & { locale: TypedLocale }>
     docs = selectedDocs.map(d => typeof d.value === 'object' ? d.value : null).filter(Boolean);
   }
 
+
+
   if (!relationTo) {
     // you could throw, log, or simply return null/placeholder
     return (
@@ -44,7 +46,7 @@ export const ArchiveBlock: React.FC<ArchiveBlockProps & { locale: TypedLocale }>
   return (
     <div id={`block-${id}`} className="my-16">
       {introContent && (
-        <div className="container mb-16">
+        <div className="container mb-12 text-center sm:text-left">
           <RichText content={introContent} enableGutter={false} />
         </div>
       )}

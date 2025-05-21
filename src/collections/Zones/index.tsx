@@ -137,7 +137,7 @@ export const Zones: CollectionConfig = {
   ],
   versions: {
     drafts: {
-      autosave: { interval: 100 },
+      autosave: false,
     },
     maxPerDoc: 50,
   },

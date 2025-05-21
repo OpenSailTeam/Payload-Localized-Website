@@ -3,7 +3,7 @@ import { cn } from 'src/utilities/cn'
 import { Link as i18nLink } from '@/i18n/routing'
 import React from 'react'
 
-import type { Page, Post } from '@/payload-types'
+import type { Page, Post, Zone, Event, } from '@/payload-types'
 import NextLink from 'next/link'
 
 type CMSLinkType = {
@@ -13,8 +13,8 @@ type CMSLinkType = {
   label?: string | null
   newTab?: boolean | null
   reference?: {
-    relationTo: 'pages' | 'posts'
-    value: Page | Post | string | number
+    relationTo: 'pages' | 'posts' | 'events' | 'zones'
+    value: Page | Post | Event | Zone | string | number
   } | null
   size?: ButtonProps['size'] | null
   type?: 'custom' | 'reference' | null
