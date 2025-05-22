@@ -91,8 +91,9 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: lexicalEditor({
-    features: () => {
+    features: ({ defaultFeatures }) => {
       return [
+        ...defaultFeatures,
         UnderlineFeature(),
         BoldFeature(),
         ItalicFeature(),

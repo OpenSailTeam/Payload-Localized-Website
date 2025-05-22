@@ -22,6 +22,22 @@ export const MultiBlock: Block = {
       label: 'Section Heading',
     },
     {
+      name: 'theme',
+      type: 'select',
+      label: 'Section Theme',
+      options: [
+        { label: 'Auto', value: 'auto' },
+        { label: 'Light', value: 'light' },
+        { label: 'Dark', value: 'dark' },
+      ],
+      defaultValue: 'auto',
+      required: true,
+      admin: {
+        description: 'Choose the theme for this section.',
+        position: 'sidebar',
+      },
+    },
+    {
       name: 'backgroundImage',
       type: 'upload',
       relationTo: 'media',

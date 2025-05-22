@@ -37,7 +37,7 @@ export const CollectionArchive = <S extends CollectionSlug>({
       </div>
 
       {/* Archive link/button */}
-      <div className="flex justify-center">
+      <div className="flex justify-center text-foreground">
         <CMSLink
           type="custom"
           appearance="inline" // or 'secondary', 'primary', etc.

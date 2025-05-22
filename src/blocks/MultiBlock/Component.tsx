@@ -16,6 +16,7 @@ const MultiBlock: React.FC<Props> = ({
   sectionTitle,
   backgroundImage,
   blocks,
+  theme, // theme prop from config
 }) => {
   const locale = useLocale() as TypedLocale
 
@@ -35,24 +36,44 @@ const MultiBlock: React.FC<Props> = ({
       }
     : undefined
 
+  // Only set data-theme if theme is not 'auto'
+  const dataTheme = theme && theme !== 'auto' ? { 'data-theme': theme } : {}
+
   return (
     <section
       id={id}
       className={cn(
         'py-16 bg-card',
-        backgroundImage && 'bg-fixed'
+        backgroundImage && 'relative bg-fixed'
       )}
-      style={sectionStyle}
+      style={!backgroundImage ? undefined : undefined}
       aria-label={sectionTitle || undefined}
+      {...dataTheme}
     >
-      <div className="container">
+      {backgroundImage && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url(${
+              typeof backgroundImage === 'object'
+                ? backgroundImage.url
+                : backgroundImage
+            })`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            opacity: 0.4,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+      <div className="container relative z-10">
         {sectionTitle && (
           <h2 className="text-3xl font-semibold text-foreground mb-8">
             {sectionTitle}
           </h2>
         )}
 
-        {/* Pass a guaranteed array into RenderBlocks */}
         <RenderBlocks blocks={safeBlocks} locale={locale} />
       </div>
     </section>

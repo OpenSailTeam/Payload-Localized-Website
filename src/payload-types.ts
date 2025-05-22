@@ -839,6 +839,10 @@ export interface Form {
 export interface MultiBlock {
   sectionTitle?: string | null;
   /**
+   * Choose the theme for this section.
+   */
+  theme: 'auto' | 'light' | 'dark';
+  /**
    * Choose an image to display behind this section
    */
   backgroundImage?: (string | null) | Media;
@@ -1195,6 +1199,7 @@ export interface FormBlockSelect<T extends boolean = true> {
  */
 export interface MultiBlockSelect<T extends boolean = true> {
   sectionTitle?: T;
+  theme?: T;
   backgroundImage?: T;
   blocks?:
     | T
