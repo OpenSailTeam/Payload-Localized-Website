@@ -2,7 +2,6 @@
 import React from 'react'
 import Link from 'next/link'
 import { cn } from '@/utilities/cn'
-import useClickableCard from '@/utilities/useClickableCard'
 import type { Zone } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { ArchiveCardProps } from '../ArchiveRegistry'
@@ -13,8 +12,7 @@ export const ZoneCard: React.FC<ArchiveCardProps<Zone>> = ({
   title: titleOverride,
   className,
 }) => {
-  const { card, link } = useClickableCard({})
-  const { slug, meta, title } = doc || {}
+  const { slug, meta, title, logo } = doc || {}
   const { description, image: metaImage } = meta || {}
 
   const titleToUse = titleOverride || title || 'Untitled zone'
@@ -26,22 +24,23 @@ export const ZoneCard: React.FC<ArchiveCardProps<Zone>> = ({
     : ''
 
   return (
-    <article
-      ref={card.ref}
-      aria-labelledby={`zone-card-title-${slug}`}
+    <Link
+      href={href}
       className={cn(
-        'group flex flex-col h-full bg-card border border-border rounded-3xl overflow-hidden shadow-sm transition-shadow hover:shadow-md',
+        'group flex flex-col h-full bg-card border border-border rounded-3xl overflow-hidden shadow-sm transition-shadow hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring',
         className
       )}
+      aria-labelledby={`zone-card-title-${slug}`}
+      tabIndex={0}
     >
       {/* Image */}
       <div className="w-full overflow-hidden">
-        {metaImage && typeof metaImage !== 'string' ? (
+        {logo && typeof logo !== 'string' ? (
           <Media
-            resource={metaImage}
+            resource={logo}
             size="720px"
-            className="w-full h-32 sm:h-48 md:h-64"
-            imgClassName="w-full h-full object-cover"
+            className="w-full h-32 sm:h-48 md:h-64 bg-white"
+            imgClassName="w-full h-full object-contain"
             alt={titleToUse}
           />
         ) : (
@@ -58,13 +57,7 @@ export const ZoneCard: React.FC<ArchiveCardProps<Zone>> = ({
           id={`zone-card-title-${slug}`}
           className="text-lg font-semibold text-foreground"
         >
-          <Link
-            href={href}
-            ref={link.ref}
-            className="inline-block focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
-          >
-            {titleToUse}
-          </Link>
+          {titleToUse}
         </h3>
 
         {/* Excerpt */}
@@ -75,15 +68,10 @@ export const ZoneCard: React.FC<ArchiveCardProps<Zone>> = ({
         )}
       </div>
 
-      {/* Explore link */}
-      <Link
-        href={href}
-        ref={link.ref}
-        className="block w-full p-5 border-t border-border text-primary font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
-        aria-label={`Learn more about ${titleToUse}`}
-      >
-        Learn more →
-      </Link>
-    </article>
+      {/* Explore link visually hidden for screen readers */}
+      <span className="sr-only" aria-hidden="false">
+        Learn more about {titleToUse}
+      </span>
+    </Link>
   )
 }

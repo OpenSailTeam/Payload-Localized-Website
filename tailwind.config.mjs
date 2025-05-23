@@ -43,6 +43,16 @@ export default {
   		}
   	},
   	extend: {
+		boxShadow: {
+			sm: '0 2px 8px rgba(0, 0, 0, 0.1)',
+			DEFAULT: '0 4px 20px rgba(0, 0, 0, 0.1)',
+			md: '0 8px 30px rgba(0, 0, 0, 0.12)',
+			lg: '0 16px 60px rgba(0, 0, 0, 0.15)',
+			xl: '0 24px 100px rgba(0, 0, 0, 0.2)',
+			'2xl': '0 32px 150px rgba(0, 0, 0, 0.25)',
+			inner: 'inset 0 4px 12px rgba(0, 0, 0, 0.06)',
+			none: 'none',
+		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out'
@@ -130,7 +140,7 @@ export default {
             '--tw-prose-headings': 'var(--primary)',
             '--tw-prose-links': 'var(--primary-foreground)',
             h1: {
-              fontSize: '4rem',
+              fontSize: '3.5rem',
               fontWeight: 'normal',
               marginBottom: '0.25em',
             },

@@ -25,13 +25,14 @@ export const Card: React.FC<ArchiveCardProps<Post>> = ({
   const excerpt = description ? description.replace(/\s+/g, ' ').trim().slice(0, 120) + '…' : ''
 
   return (
-    <article
-      ref={card.ref}
-      aria-labelledby={`post-card-title-${slug}`}
+    <Link
+      href={href}
       className={cn(
-        'group flex flex-col bg-card border border-border rounded-3xl overflow-hidden shadow-sm transition-shadow hover:shadow-md h-full',
+        'group flex flex-col bg-card border border-border rounded-3xl overflow-hidden shadow-sm transition-shadow hover:shadow-md h-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring',
         className,
       )}
+      aria-labelledby={`event-card-title-${slug}`}
+      tabIndex={0}
     >
       {/* Image */}
       <div className="w-full overflow-hidden">
@@ -84,27 +85,19 @@ export const Card: React.FC<ArchiveCardProps<Post>> = ({
 
         {/* Title */}
         <h3 id={`post-card-title-${slug}`} className="text-lg font-semibold text-foreground">
-          <Link
-            href={href}
-            ref={link.ref}
-            className="inline-block focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
-          >
-            {titleToUse}
-          </Link>
+          {titleToUse}
         </h3>
 
         {/* Excerpt */}
         {excerpt && <p className="text-sm text-muted-foreground flex-grow">{excerpt}</p>}
       </div>
 
-      <Link
-        href={href}
-        ref={link.ref}
+      <div
         className="block w-full p-5 border-t border-border text-primary font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
         aria-label={`Read full text of ${titleToUse}`}
       >
         Read more →
-      </Link>
-    </article>
+      </div>
+    </Link>
   )
 }

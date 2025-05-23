@@ -26,6 +26,7 @@ import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Events } from './collections/Events'
 import { Zones } from './collections/Zones'
+import { GolfPros } from './collections/GolfPros'
 import Users from './collections/Users'
 import { seedHandler } from './endpoints/seedHandler'
 import { Footer } from './globals/Footer/config'
@@ -39,6 +40,7 @@ import { beforeSyncWithSearch } from '@/search/beforeSync'
 import localization from './i18n/localization'
 
 import { resendAdapter } from '@payloadcms/email-resend'
+import { TextSizeFeature } from "payload-lexical-typography";
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -94,6 +96,21 @@ export default buildConfig({
     features: ({ defaultFeatures }) => {
       return [
         ...defaultFeatures,
+        TextSizeFeature({
+          sizes: [
+            { value: "0.875rem", label: "Small" },
+            { value: "1rem",   label: "Normal" },
+            { value: "1.125rem", label: "Large (H3)" },
+            { value: "1.5rem",   label: "XL (H2)" },
+            { value: "3.5rem",   label: "XL (H1)" },
+            { value: "4rem",   label: "2XL" },
+            { value: "5rem",   label: "3XL" },
+            { value: "6rem",   label: "4XL" },
+            { value: "7rem",   label: "5XL" },
+          ],
+          scroll: false,
+          customSize: false,      // remove the “enter custom size” field
+        }),
         UnderlineFeature(),
         BoldFeature(),
         ItalicFeature(),
@@ -125,7 +142,7 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  collections: [Pages, Posts, Events, Zones, Media, Categories, Users],
+  collections: [Pages, Posts, Events, Zones, Media, Categories, Users, GolfPros],
   cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   endpoints: [
@@ -140,7 +157,7 @@ export default buildConfig({
   globals: [Header, Footer],
   plugins: [
     redirectsPlugin({
-      collections: ['pages', 'posts', 'events', 'zones'],
+      collections: ['pages', 'posts', 'events', 'zones', 'golf-pros'],
       overrides: {
         // @ts-expect-error
         fields: ({ defaultFields }) => {
@@ -195,7 +212,7 @@ export default buildConfig({
       },
     }),
     searchPlugin({
-      collections: ['posts', 'events', 'zones'],
+      collections: ['posts', 'events', 'zones', 'golf-pros'],
       beforeSync: beforeSyncWithSearch,
       searchOverrides: {
         fields: ({ defaultFields }) => {

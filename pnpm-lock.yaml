@@ -89,6 +89,9 @@ importers:
       payload-admin-bar:
         specifier: ^1.0.6
         version: 1.0.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      payload-lexical-typography:
+        specifier: ^0.4.0
+        version: 0.4.0(zyirr7drsz5klvzgseb5mqej2e)
       prism-react-renderer:
         specifier: ^2.3.1
         version: 2.4.1(react@19.1.0)
@@ -980,6 +983,9 @@ packages:
   '@jsdevtools/ono@7.1.3':
     resolution: {integrity: sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==}
 
+  '@lexical/clipboard@0.25.0':
+    resolution: {integrity: sha512-z0Dx6fDSLfbfK/LsfjkFbOTO87kHXQ6FNi8eCvVHtMLnME91kHTaotIalEdlS69Hw6032AThnEqeN5rAB24BlQ==}
+
   '@lexical/clipboard@0.28.0':
     resolution: {integrity: sha512-LYqion+kAwFQJStA37JAEMxTL/m1WlZbotDfM/2WuONmlO0yWxiyRDI18oeCwhBD6LQQd9c3Ccxp9HFwUG1AVw==}
 
@@ -1004,11 +1010,17 @@ packages:
   '@lexical/history@0.28.0':
     resolution: {integrity: sha512-CHzDxaGDn6qCFFhU0YKP1B8sgEb++0Ksqsj6BfDL/6TMxoLNQwRQhP3BUNNXl1kvUhxTQZgk3b9MjJZRaFKG9Q==}
 
+  '@lexical/html@0.25.0':
+    resolution: {integrity: sha512-bjO5RbMpyFw4H6kCgYcdAlxzhoF1tjtRZ1w0MxSHReLg9wqNaeg4uNwdW+uVMbxRv+cYqaO0To66qMAcND6tiQ==}
+
   '@lexical/html@0.28.0':
     resolution: {integrity: sha512-ayb0FPxr55Ko99/d9ewbfrApul4L0z+KpU2ZG03im7EvUPVLyIGLx4S0QguMDvQh0Vu+eJ7/EESuonDs5BCe3A==}
 
   '@lexical/link@0.28.0':
     resolution: {integrity: sha512-T5VKxpOnML5DcXv2lW3Le0vjNlcbdohZjS9f6PAvm6eX8EzBKDpLQCopr1/0KGdlLd1QrzQsykQrdU7ieC4LRg==}
+
+  '@lexical/list@0.25.0':
+    resolution: {integrity: sha512-hAEcNuE9WxDHJGUcwkTN+4sGn1/j5/wBqkuaYrBrhf7vCHeKUAu7er7T7Gdfj1HPfjqZm6YxdqFF4LYqejwuRg==}
 
   '@lexical/list@0.28.0':
     resolution: {integrity: sha512-3a8QcZ75n2TLxP+xkSPJ2V15jsysMLMe0YoObG+ew/sioVelIU8GciYsWBo5GgQmwSzJNQJeK5cJ9p1b71z2cg==}
@@ -1037,14 +1049,23 @@ packages:
   '@lexical/rich-text@0.28.0':
     resolution: {integrity: sha512-y+vUWI+9uFupIb9UvssKU/DKcT9dFUZuQBu7utFkLadxCNyXQHeRjxzjzmvFiM3DBV0guPUDGu5VS5TPnIA+OA==}
 
+  '@lexical/selection@0.25.0':
+    resolution: {integrity: sha512-zbUflzM5bAER5JyDXNbaw4s9w5kp8Y2oYqpplkZhMXj8Ri3CUE5bQgt4vH6XbyKVl4hsJlVcZ3qmw3HJAcnWNQ==}
+
   '@lexical/selection@0.28.0':
     resolution: {integrity: sha512-AJDi67Nsexyejzp4dEQSVoPov4P+FJ0t1v6DxUU+YmcvV56QyJQi6ue0i/xd8unr75ZufzLsAC0cDJJCEI7QDA==}
+
+  '@lexical/table@0.25.0':
+    resolution: {integrity: sha512-gWOvqyz1eGv504fxH7r0hZACYgxEldr5GlzS2GoII3S1OjGhEOjBkM5JNMzATFaxvfdUkL2ywbmBfhk5hI/spg==}
 
   '@lexical/table@0.28.0':
     resolution: {integrity: sha512-HMPCwXdj0sRWdlDzsHcNWRgbeKbEhn3L8LPhFnTq7q61gZ4YW2umdmuvQFKnIBcKq49drTH8cUwZoIwI8+AEEw==}
 
   '@lexical/text@0.28.0':
     resolution: {integrity: sha512-PT/A2RZv+ktn7SG/tJkOpGlYE6zjOND59VtRHnV/xciZ+jEJVaqAHtWjhbWibAIZQAkv/O7UouuDqzDaNTSGAA==}
+
+  '@lexical/utils@0.25.0':
+    resolution: {integrity: sha512-LAB/5OniVCDFMWh8zuKejqU4blAP5CEIpPXBtevbHROtbz3fqo/xqcHK3bGGP9w1UKYH0S6n+MA8Uv9hdVzf7w==}
 
   '@lexical/utils@0.28.0':
     resolution: {integrity: sha512-Qw00DjkS1nRK7DLSgqJpJ77Ti2AuiOQ6m5eM38YojoWXkVmoxqKAUMaIbVNVKqjFgrQvKFF46sXxIJPbUQkB0w==}
@@ -3101,6 +3122,9 @@ packages:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
 
+  lexical@0.25.0:
+    resolution: {integrity: sha512-yZNfC+3Df/qGAbGD1Lsh+dkG0COJKGuDlT1e/t0qS9F1jaKvoz7Fm0tACQ3eRTbOYncJiaJveLiT9GADac2hrA==}
+
   lexical@0.28.0:
     resolution: {integrity: sha512-dLE3O1PZg0TlZxRQo9YDpjCjDUj8zluGyBO9MHdjo21qZmMUNrxQPeCRt8fn2s5l4HKYFQ1YNgl7k1pOJB/vZQ==}
 
@@ -3526,6 +3550,14 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+  payload-lexical-typography@0.4.0:
+    resolution: {integrity: sha512-3vWia5wrzebdR1uh1rdIBuedGtl1lyI702QNHOZrWvPfc6fnUDKZ34Pe/Rm75ZNUVfP3C6qTFhYdCCMJSJ/g0g==}
+    peerDependencies:
+      '@payloadcms/richtext-lexical': ^3.26.0
+      '@payloadcms/ui': ^3.26.0
+      react: ^19.0.0
+      react-dom: ^19.0.0
+
   payload@3.38.0:
     resolution: {integrity: sha512-A+KpKyn05Y4vlWTH4uAxkMySfBw4rtES1GydzFtjYEN8gxht1yXiK6zhfldGPyJrFuwPkzVpYC/7Lvg20Np7EA==}
     engines: {node: ^18.20.2 || >=20.9.0}
@@ -3674,6 +3706,12 @@ packages:
 
   quick-format-unescaped@4.0.4:
     resolution: {integrity: sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==}
+
+  react-colorful@5.6.1:
+    resolution: {integrity: sha512-1exovf0uGTGyq5mXQT0zgQ80uvj2PCwvF8zY1RN9/vbJVSjSo3fsB/4L3ObbF7u70NduSiK4xu4Y6q1MHoUGEw==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
 
   react-datepicker@7.6.0:
     resolution: {integrity: sha512-9cQH6Z/qa4LrGhzdc3XoHbhrxNcMi9MKjZmYgF/1MNNaJwvdSjv3Xd+jjvrEEbKEf71ZgCA3n7fQbdwd70qCRw==}
@@ -5514,6 +5552,14 @@ snapshots:
 
   '@jsdevtools/ono@7.1.3': {}
 
+  '@lexical/clipboard@0.25.0':
+    dependencies:
+      '@lexical/html': 0.25.0
+      '@lexical/list': 0.25.0
+      '@lexical/selection': 0.25.0
+      '@lexical/utils': 0.25.0
+      lexical: 0.25.0
+
   '@lexical/clipboard@0.28.0':
     dependencies:
       '@lexical/html': 0.28.0
@@ -5557,6 +5603,12 @@ snapshots:
       '@lexical/utils': 0.28.0
       lexical: 0.28.0
 
+  '@lexical/html@0.25.0':
+    dependencies:
+      '@lexical/selection': 0.25.0
+      '@lexical/utils': 0.25.0
+      lexical: 0.25.0
+
   '@lexical/html@0.28.0':
     dependencies:
       '@lexical/selection': 0.28.0
@@ -5567,6 +5619,11 @@ snapshots:
     dependencies:
       '@lexical/utils': 0.28.0
       lexical: 0.28.0
+
+  '@lexical/list@0.25.0':
+    dependencies:
+      '@lexical/utils': 0.25.0
+      lexical: 0.25.0
 
   '@lexical/list@0.28.0':
     dependencies:
@@ -5635,9 +5692,19 @@ snapshots:
       '@lexical/utils': 0.28.0
       lexical: 0.28.0
 
+  '@lexical/selection@0.25.0':
+    dependencies:
+      lexical: 0.25.0
+
   '@lexical/selection@0.28.0':
     dependencies:
       lexical: 0.28.0
+
+  '@lexical/table@0.25.0':
+    dependencies:
+      '@lexical/clipboard': 0.25.0
+      '@lexical/utils': 0.25.0
+      lexical: 0.25.0
 
   '@lexical/table@0.28.0':
     dependencies:
@@ -5648,6 +5715,13 @@ snapshots:
   '@lexical/text@0.28.0':
     dependencies:
       lexical: 0.28.0
+
+  '@lexical/utils@0.25.0':
+    dependencies:
+      '@lexical/list': 0.25.0
+      '@lexical/selection': 0.25.0
+      '@lexical/table': 0.25.0
+      lexical: 0.25.0
 
   '@lexical/utils@0.28.0':
     dependencies:
@@ -8078,6 +8152,8 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
+  lexical@0.25.0: {}
+
   lexical@0.28.0: {}
 
   lib0@0.2.108:
@@ -8612,6 +8688,17 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
+  payload-lexical-typography@0.4.0(zyirr7drsz5klvzgseb5mqej2e):
+    dependencies:
+      '@lexical/table': 0.25.0
+      '@payloadcms/richtext-lexical': 3.38.0(@faceless-ui/modal@3.0.0-beta.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@faceless-ui/scroll-info@2.0.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@payloadcms/next@3.38.0(@types/react@19.0.1)(graphql@16.11.0)(monaco-editor@0.52.2)(next@15.3.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.77.4))(payload@3.38.0(graphql@16.11.0)(typescript@5.7.2))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.7.2))(@types/react@19.0.1)(monaco-editor@0.52.2)(next@15.3.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.77.4))(payload@3.38.0(graphql@16.11.0)(typescript@5.7.2))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.7.2)(yjs@13.6.27)
+      '@payloadcms/ui': 3.38.0(@types/react@19.0.1)(monaco-editor@0.52.2)(next@15.3.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.77.4))(payload@3.38.0(graphql@16.11.0)(typescript@5.7.2))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.7.2)
+      '@types/escape-html': 1.0.4
+      escape-html: 1.0.3
+      react: 19.1.0
+      react-colorful: 5.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react-dom: 19.1.0(react@19.1.0)
+
   payload@3.38.0(graphql@16.11.0)(typescript@5.7.2):
     dependencies:
       '@next/env': 15.3.2
@@ -8788,6 +8875,11 @@ snapshots:
   queue-microtask@1.2.3: {}
 
   quick-format-unescaped@4.0.4: {}
+
+  react-colorful@5.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
 
   react-datepicker@7.6.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:

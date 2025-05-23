@@ -1,5 +1,4 @@
 import type { Block } from 'payload'
-
 import {
   FixedToolbarFeature,
   HeadingFeature,
@@ -16,14 +15,12 @@ export const Archive: Block = {
       type: 'richText',
       localized: true,
       editor: lexicalEditor({
-        features: ({ rootFeatures }) => {
-          return [
-            ...rootFeatures,
-            HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-            FixedToolbarFeature(),
-            InlineToolbarFeature(),
-          ]
-        },
+        features: ({ rootFeatures }) => [
+          ...rootFeatures,
+          HeadingFeature({ enabledHeadingSizes: ['h1','h2','h3','h4'] }),
+          FixedToolbarFeature(),
+          InlineToolbarFeature(),
+        ],
       }),
       label: 'Intro Content',
     },
@@ -32,63 +29,77 @@ export const Archive: Block = {
       type: 'select',
       defaultValue: 'collection',
       options: [
-        {
-          label: 'Collection',
-          value: 'collection',
-        },
-        {
-          label: 'Individual Selection',
-          value: 'selection',
-        },
+        { label: 'Collection', value: 'collection' },
+        { label: 'Individual Selection', value: 'selection' },
       ],
     },
     {
       name: 'relationTo',
       type: 'select',
-      admin: {
-        condition: (_, siblingData) => siblingData.populateBy === 'collection',
-      },
+      admin: { condition: (_, data) => data.populateBy === 'collection' },
       defaultValue: 'posts',
       label: 'Collection to Show',
       options: [
         { label: 'Posts', value: 'posts' },
         { label: 'Events', value: 'events' },
-        { label: 'Zones', value: 'zones' },
+        { label: 'Zones',  value: 'zones'  },
+        { label: 'Golf Pros',  value: 'golf-pros'  },
       ],
     },
     {
       name: 'categories',
       type: 'relationship',
-      admin: {
-        condition: (_, siblingData) => siblingData.populateBy === 'collection',
-      },
       hasMany: true,
-      label: 'Categories To Show',
       relationTo: 'categories',
+      admin: { condition: (_, data) => data.populateBy === 'collection' },
+      label: 'Categories To Show',
     },
     {
       name: 'limit',
       type: 'number',
+      defaultValue: 10,
       admin: {
-        condition: (_, siblingData) => siblingData.populateBy === 'collection',
+        condition: (_, data) => data.populateBy === 'collection',
         step: 1,
       },
-      defaultValue: 10,
       label: 'Limit',
     },
     {
       name: 'selectedDocs',
       type: 'relationship',
-      admin: {
-        condition: (_, siblingData) => siblingData.populateBy === 'selection',
-      },
       hasMany: true,
-      label: 'Select Documents',
       relationTo: ['posts','events','zones'],
+      admin: { condition: (_, data) => data.populateBy === 'selection' },
+      label: 'Select Documents',
+    },
+    // ── NEW FIELDS ──
+    {
+      name: 'showArchiveLink',
+      type: 'checkbox',
+      label: 'Show “See all” link/button',
+      defaultValue: true,
+    },
+    {
+      name: 'archiveLabel',
+      type: 'text',
+      label: 'Custom archive button text',
+      admin: {
+        description: 'Overrides default “See all [collection]” label',
+        condition: (_, data) => data.showArchiveLink === true,
+      },
+    },
+    {
+      name: 'archiveUrl',
+      type: 'text',
+      label: 'Custom archive button URL',
+      admin: {
+        description: 'Overrides default `/${relationTo}` link',
+        condition: (_, data) => data.showArchiveLink === true,
+      },
     },
   ],
   labels: {
-    plural: 'Archives',
     singular: 'Archive',
+    plural:   'Archives',
   },
 }

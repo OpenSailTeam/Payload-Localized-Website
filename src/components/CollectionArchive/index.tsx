@@ -1,11 +1,12 @@
+import { useTranslations } from 'next-intl'
 import { Registry, CollectionSlug, ArchiveCardProps } from '../ArchiveRegistry'
 import React from 'react'
 import { CMSLink } from '../Link'
 
 export type Props<S extends CollectionSlug = CollectionSlug> = {
-  docs: any[]                 // or DocMap[S][]
+  docs: any[]
   relationTo: S
-  /** Text for the archive button; defaults to “View all [relationTo]” */
+  /** Text for the archive button; defaults to “View all [collection label]” */
   archiveLabel?: string
   /** Overrides the URL for the archive button; defaults to `/${relationTo}` */
   archiveUrl?: string
@@ -16,10 +17,14 @@ export const CollectionArchive = <S extends CollectionSlug>({
   relationTo,
   archiveLabel,
   archiveUrl,
-}: Props<S>) => {
-  const CardComponent = Registry[relationTo] as React.FC<ArchiveCardProps<any>>
-  // Build defaults:
-  const defaultLabel = `See all ${relationTo} ->`
+  showArchiveLink = true,
+}: Props<S> & { showArchiveLink?: boolean }) => {
+  const t = useTranslations()
+  // Use t() to translate the registry label at render time.
+  const { component: CardComponent } = Registry[relationTo]
+  // Get translation or fallback to the static label
+  const translatedLabel = t(relationTo) || Registry[relationTo].label
+  const defaultLabel = `See all ${translatedLabel} →`
   const href = archiveUrl || `/${relationTo}`
 
   return (
@@ -30,22 +35,22 @@ export const CollectionArchive = <S extends CollectionSlug>({
             <CardComponent
               doc={doc}
               relationTo={relationTo}
-              // showCategories?
             />
           </div>
         ))}
       </div>
 
-      {/* Archive link/button */}
-      <div className="flex justify-center text-foreground">
-        <CMSLink
-          type="custom"
-          appearance="inline" // or 'secondary', 'primary', etc.
-          url={href}
-          label={archiveLabel || defaultLabel}
-          size="lg"
-        />
-      </div>
+      {showArchiveLink && (
+        <div className="flex justify-center text-foreground">
+          <CMSLink
+            type="custom"
+            appearance="inline"
+            url={href}
+            label={archiveLabel || defaultLabel}
+            size="lg"
+          />
+        </div>
+      )}
     </div>
   )
 }

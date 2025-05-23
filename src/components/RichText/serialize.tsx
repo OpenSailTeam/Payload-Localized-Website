@@ -18,7 +18,7 @@ import {
 } from './nodeFormat'
 import type { Page } from '@/payload-types'
 
-export type NodeTypes =
+type NodeTypes =
   | DefaultNodeTypes
   | SerializedBlockNode<
       | Extract<Page['layout'][0], { blockType: 'cta' }>
@@ -35,11 +35,38 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
   return (
     <Fragment>
       {nodes?.map((node, index): JSX.Element | null => {
+        // Debug: inspect every node
         if (node == null) {
           return null
         }
 
+        if (node.type === 'upload') {
+          if (node.value && typeof node.value === 'object' && 'url' in node.value && node.value.url) {
+            return (
+              <img
+                key={index}
+                src={node.value.url}
+                alt={'alt' in node.value ? node.value.alt || '' : ''}
+                className="my-4 rounded-lg"
+              />
+            )
+          }
+          return null
+        }
+
+        // Handle typography plugin wrapper nodes
+        if ((node as any).type === 'textStyle' && 'children' in node) {
+          return serializeLexical({ nodes: (node as any).children as NodeTypes[] })
+        }
+
+        // Debug: detect wrapper node types
+        if ((node as any).type === 'textStyle' && 'children' in node) {
+          return serializeLexical({ nodes: (node as any).children as NodeTypes[] })
+        }
+
         if (node.type === 'text') {
+          // Debug: inspect style attributes on text nodes
+
           let text = <React.Fragment key={index}>{node.text}</React.Fragment>
           if (node.format & IS_BOLD) {
             text = <strong key={index}>{text}</strong>
@@ -71,12 +98,32 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
             text = <sup key={index}>{text}</sup>
           }
 
+          // Font-Size support from payload-lexical-typography
+          const styleAttrs = (node as any).style as { fontSize?: string } | undefined
+          if (styleAttrs?.fontSize) {
+            text = (
+              <span key={index} style={{ fontSize: styleAttrs.fontSize }}>
+                {text}
+              </span>
+            )
+          }
+
+          // Font-size support: parse style string (e.g. "font-size: 1.5rem;")
+          const styleStr = (node as any).style || ''
+          const fontMatch = String(styleStr).match(/font-size:\s*([^;]+);?/)  
+          if (fontMatch && fontMatch[1]) {
+            const fontSize = fontMatch[1]
+            text = (
+              <span key={index} style={{ fontSize }}>
+                {text}
+              </span>
+            )
+          }
+
           return text
         }
 
-        // NOTE: Hacky fix for
-        // https://github.com/facebook/lexical/blob/d10c4e6e55261b2fdd7d1845aed46151d0f06a8c/packages/lexical-list/src/LexicalListItemNode.ts#L133
-        // which does not return checked: false (only true - i.e. there is no prop for false)
+        // NOTE: Hacky fix for list items without explicit checked=false
         const serializedChildrenFn = (node: NodeTypes): JSX.Element | null => {
           if (node.children == null) {
             return null
@@ -98,7 +145,6 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
 
         if (node.type === 'block') {
           const block = node.fields
-
           const blockType = block?.blockType
 
           if (!block || !blockType) {
@@ -162,7 +208,6 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
                     aria-checked={node.checked ? 'true' : 'false'}
                     className={` ${node.checked ? '' : ''}`}
                     key={index}
-                    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
                     role="checkbox"
                     tabIndex={-1}
                     value={node?.value}

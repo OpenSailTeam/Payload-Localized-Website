@@ -16,7 +16,7 @@ const MultiBlock: React.FC<Props> = ({
   sectionTitle,
   backgroundImage,
   blocks,
-  theme, // theme prop from config
+  theme,
 }) => {
   const locale = useLocale() as TypedLocale
 

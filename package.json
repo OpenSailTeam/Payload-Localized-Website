@@ -49,6 +49,7 @@
     "next-intl": "^3.23.2",
     "payload": "^3.38.0",
     "payload-admin-bar": "^1.0.6",
+    "payload-lexical-typography": "^0.4.0",
     "prism-react-renderer": "^2.3.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

@@ -74,6 +74,7 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    'golf-pros': GolfPro;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -91,6 +92,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'golf-pros': GolfProsSelect<false> | GolfProsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -609,7 +611,7 @@ export interface ArchiveBlock {
     [k: string]: unknown;
   } | null;
   populateBy?: ('collection' | 'selection') | null;
-  relationTo?: ('posts' | 'events' | 'zones') | null;
+  relationTo?: ('posts' | 'events' | 'zones' | 'golf-pros') | null;
   categories?: (string | Category)[] | null;
   limit?: number | null;
   selectedDocs?:
@@ -628,6 +630,15 @@ export interface ArchiveBlock {
           }
       )[]
     | null;
+  showArchiveLink?: boolean | null;
+  /**
+   * Overrides default “See all [collection]” label
+   */
+  archiveLabel?: string | null;
+  /**
+   * Overrides default `/${relationTo}` link
+   */
+  archiveUrl?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'archive';
@@ -853,6 +864,47 @@ export interface MultiBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "golf-pros".
+ */
+export interface GolfPro {
+  id: string;
+  name: string;
+  photo?: (string | null) | Media;
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  location: string;
+  organization: string;
+  zone?: (string | null) | Zone;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -879,6 +931,10 @@ export interface Redirect {
       | ({
           relationTo: 'zones';
           value: string | Zone;
+        } | null)
+      | ({
+          relationTo: 'golf-pros';
+          value: string | GolfPro;
         } | null);
     url?: string | null;
   };
@@ -924,6 +980,10 @@ export interface Search {
     | {
         relationTo: 'zones';
         value: string | Zone;
+      }
+    | {
+        relationTo: 'golf-pros';
+        value: string | GolfPro;
       };
   slug?: string | null;
   meta?: {
@@ -975,6 +1035,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: string | User;
+      } | null)
+    | ({
+        relationTo: 'golf-pros';
+        value: string | GolfPro;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1179,6 +1243,9 @@ export interface ArchiveBlockSelect<T extends boolean = true> {
   categories?: T;
   limit?: T;
   selectedDocs?: T;
+  showArchiveLink?: T;
+  archiveLabel?: T;
+  archiveUrl?: T;
   id?: T;
   blockName?: T;
 }
@@ -1355,6 +1422,31 @@ export interface UsersSelect<T extends boolean = true> {
   hash?: T;
   loginAttempts?: T;
   lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "golf-pros_select".
+ */
+export interface GolfProsSelect<T extends boolean = true> {
+  name?: T;
+  photo?: T;
+  description?: T;
+  location?: T;
+  organization?: T;
+  zone?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  publishedAt?: T;
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

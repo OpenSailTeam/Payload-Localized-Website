@@ -14,8 +14,6 @@ export const EventCard: React.FC<ArchiveCardProps<Event>> = ({
   title: titleOverride,
   className,
 }) => {
-  const { card, link } = useClickableCard({})
-
   const {
     slug,
     startDate,
@@ -52,14 +50,16 @@ export const EventCard: React.FC<ArchiveCardProps<Event>> = ({
   const href = `/${relationTo}/${slug}`
 
   return (
-    <article
-      ref={card.ref}
+    <Link
+      href={href}
       className={cn(
-        'group flex flex-col bg-card border border-border rounded-3xl overflow-hidden shadow-sm transition-shadow hover:shadow-md h-full',
+        'group flex flex-col bg-card border border-border rounded-3xl overflow-hidden shadow-sm transition-shadow hover:shadow-md h-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring',
         className
       )}
       aria-labelledby={`event-card-title-${slug}`}
+      tabIndex={0}
     >
+      {/* Image */}
       <div className="w-full overflow-hidden">
         {meta?.image && typeof meta.image !== 'string' ? (
           <Media
@@ -104,13 +104,7 @@ export const EventCard: React.FC<ArchiveCardProps<Event>> = ({
           id={`event-card-title-${slug}`}
           className="text-lg font-semibold text-foreground"
         >
-          <Link
-            href={href}
-            ref={link.ref}
-            className="inline-block focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
-          >
-            {titleToUse}
-          </Link>
+          {titleToUse}
         </h3>
 
         <div className="flex flex-col gap-2 text-sm text-muted-foreground">
@@ -135,14 +129,12 @@ export const EventCard: React.FC<ArchiveCardProps<Event>> = ({
         </div>
       </div>
 
-      <Link
-        href={href}
-        ref={link.ref}
+      <div
         className="block w-full p-5 border-t border-border text-primary font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
         aria-label={`View details for ${titleToUse}`}
       >
         View event details →
-      </Link>
-    </article>
+      </div>
+    </Link>
   )
 }

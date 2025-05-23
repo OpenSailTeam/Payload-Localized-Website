@@ -10,8 +10,18 @@ import { TypedLocale } from 'payload'
 
 // src/blocks/ArchiveBlock/Component.tsx
 export const ArchiveBlock: React.FC<ArchiveBlockProps & { locale: TypedLocale }> = async ({
-  id, populateBy, relationTo, selectedDocs, categories, limit: limitProp, locale, introContent,
-}) => {
+    id,
+    populateBy,
+    relationTo,
+    selectedDocs,
+    categories,
+    limit: limitProp,
+    locale,
+    introContent,
+    showArchiveLink = true,
+    archiveLabel,
+    archiveUrl,
+  }) => {
   const limit = limitProp || 3;
   let docs: any[] = [];
 
@@ -50,7 +60,14 @@ export const ArchiveBlock: React.FC<ArchiveBlockProps & { locale: TypedLocale }>
           <RichText content={introContent} enableGutter={false} />
         </div>
       )}
-      <CollectionArchive docs={docs} relationTo={relationTo} />
+
+      <CollectionArchive
+        docs={docs}
+        relationTo={relationTo}
+        archiveLabel={archiveLabel ?? undefined}
+        archiveUrl={archiveUrl ?? undefined}
+        showArchiveLink={showArchiveLink ?? undefined}
+      />
     </div>
   );
 };
