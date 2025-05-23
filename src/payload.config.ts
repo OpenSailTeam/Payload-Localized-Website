@@ -25,6 +25,8 @@ import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Events } from './collections/Events'
+import { EventTypes } from './collections/EventTypes'
+import { SubTypes } from './collections/SubTypes'
 import { Zones } from './collections/Zones'
 import { GolfPros } from './collections/GolfPros'
 import Users from './collections/Users'
@@ -142,7 +144,7 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  collections: [Pages, Posts, Events, Zones, Media, Categories, Users, GolfPros],
+  collections: [Pages, Posts, Events, Zones, Media, Categories, Users, GolfPros, EventTypes, SubTypes],
   cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   endpoints: [
@@ -179,16 +181,13 @@ export default buildConfig({
       },
     }),
     nestedDocsPlugin({
-      collections: ['categories'],
+      collections: ['categories', 'event-types', 'sub-types'],
     }),
     seoPlugin({
       generateTitle,
       generateURL,
     }),
     formBuilderPlugin({
-      fields: {
-        payment: false,
-      },
       formOverrides: {
         fields: ({ defaultFields }) => {
           return defaultFields.map((field) => {

@@ -75,6 +75,8 @@ export interface Config {
     categories: Category;
     users: User;
     'golf-pros': GolfPro;
+    'event-types': EventType;
+    'sub-types': SubType;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -93,6 +95,8 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'golf-pros': GolfProsSelect<false> | GolfProsSelect<true>;
+    'event-types': EventTypesSelect<false> | EventTypesSelect<true>;
+    'sub-types': SubTypesSelect<false> | SubTypesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -385,6 +389,15 @@ export interface User {
 export interface Event {
   id: string;
   title: string;
+  facility: string;
+  sponsors?:
+    | {
+        sponsor?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  duplicateEventSource?: (string | null) | Event;
+  golfGeniusURL?: string | null;
   description: {
     root: {
       type: string;
@@ -400,6 +413,44 @@ export interface Event {
     };
     [k: string]: unknown;
   };
+  registrationOptions?:
+    | {
+        optionName?: string | null;
+        /**
+         * Date when this registration option becomes available.
+         */
+        StartDate?: string | null;
+        /**
+         * Date when this registration option ends.
+         */
+        EndDate?: string | null;
+        participantLimit?: number | null;
+        waitlist?: {
+          enableWaitlist?: boolean | null;
+          /**
+           * Message to inform users about waitlist position.
+           */
+          waitlistMessage?: string | null;
+        };
+        requireActiveMembership?: boolean | null;
+        entryForm: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
   startDate: string;
   endDate?: string | null;
   location: string;
@@ -415,6 +466,11 @@ export interface Event {
     image?: (string | null) | Media;
     description?: string | null;
   };
+  financial?: {
+    unearnedGLAccount?: string | null;
+  };
+  eventTypes?: (string | EventType)[] | null;
+  subType?: (string | null) | SubType;
   publishedAt?: string | null;
   organizers?: (string | User)[] | null;
   populatedOrganizers?:
@@ -428,6 +484,46 @@ export interface Event {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-types".
+ */
+export interface EventType {
+  id: string;
+  typeName: string;
+  parent?: (string | null) | EventType;
+  breadcrumbs?:
+    | {
+        doc?: (string | null) | EventType;
+        url?: string | null;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sub-types".
+ */
+export interface SubType {
+  id: string;
+  name: string;
+  description?: string | null;
+  eventType: string | EventType;
+  parent?: (string | null) | SubType;
+  breadcrumbs?:
+    | {
+        doc?: (string | null) | SubType;
+        url?: string | null;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1041,6 +1137,14 @@ export interface PayloadLockedDocument {
         value: string | GolfPro;
       } | null)
     | ({
+        relationTo: 'event-types';
+        value: string | EventType;
+      } | null)
+    | ({
+        relationTo: 'sub-types';
+        value: string | SubType;
+      } | null)
+    | ({
         relationTo: 'redirects';
         value: string | Redirect;
       } | null)
@@ -1319,7 +1423,33 @@ export interface PostsSelect<T extends boolean = true> {
  */
 export interface EventsSelect<T extends boolean = true> {
   title?: T;
+  facility?: T;
+  sponsors?:
+    | T
+    | {
+        sponsor?: T;
+        id?: T;
+      };
+  duplicateEventSource?: T;
+  golfGeniusURL?: T;
   description?: T;
+  registrationOptions?:
+    | T
+    | {
+        optionName?: T;
+        StartDate?: T;
+        EndDate?: T;
+        participantLimit?: T;
+        waitlist?:
+          | T
+          | {
+              enableWaitlist?: T;
+              waitlistMessage?: T;
+            };
+        requireActiveMembership?: T;
+        entryForm?: T;
+        id?: T;
+      };
   startDate?: T;
   endDate?: T;
   location?: T;
@@ -1334,6 +1464,13 @@ export interface EventsSelect<T extends boolean = true> {
         image?: T;
         description?: T;
       };
+  financial?:
+    | T
+    | {
+        unearnedGLAccount?: T;
+      };
+  eventTypes?: T;
+  subType?: T;
   publishedAt?: T;
   organizers?: T;
   populatedOrganizers?:
@@ -1447,6 +1584,44 @@ export interface GolfProsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-types_select".
+ */
+export interface EventTypesSelect<T extends boolean = true> {
+  typeName?: T;
+  parent?: T;
+  breadcrumbs?:
+    | T
+    | {
+        doc?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sub-types_select".
+ */
+export interface SubTypesSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  eventType?: T;
+  parent?: T;
+  breadcrumbs?:
+    | T
+    | {
+        doc?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

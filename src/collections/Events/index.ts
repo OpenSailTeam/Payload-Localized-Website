@@ -73,6 +73,43 @@ export const Events: CollectionConfig = {
       type: 'tabs',
       tabs: [
         {
+          label: 'Event Details',
+          fields: [
+            {
+              name: 'facility',
+              type: 'text',
+              localized: true,
+              required: true,
+              admin: { position: 'sidebar' },
+              label: 'Facility',
+            },
+            {
+              name: 'sponsors',
+              type: 'array',
+              label: 'Sponsors',
+              fields: [
+                {
+                  name: 'sponsor',
+                  type: 'text',
+                  label: 'Sponsor Name',
+                },
+              ],
+            },
+            {
+              name: 'duplicateEventSource',
+              type: 'relationship',
+              relationTo: 'events',
+              label: 'Duplicate From Existing Event',
+              admin: { position: 'sidebar' },
+            },
+            {
+              name: 'golfGeniusURL',
+              type: 'text',
+              label: 'Golf Genius URL',
+            },
+          ],
+        },
+        {
           label: 'Content',
           fields: [
             {
@@ -84,13 +121,111 @@ export const Events: CollectionConfig = {
               editor: lexicalEditor({
                 features: ({ rootFeatures }) => [
                   ...rootFeatures,
-                  HeadingFeature({ enabledHeadingSizes: ['h1','h2','h3'] }),
-                  BlocksFeature({ blocks: [Banner, Code, MediaBlock, CallToAction, Content, Archive, FormBlock] }),
+                  HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3'] }),
+                  BlocksFeature({
+                    blocks: [Banner, Code, MediaBlock, CallToAction, Content, Archive, FormBlock],
+                  }),
                   FixedToolbarFeature(),
                   InlineToolbarFeature(),
                   HorizontalRuleFeature(),
                 ],
               }),
+            },
+          ],
+        },
+        {
+          label: 'Registration Options',
+          fields: [
+            {
+              name: 'registrationOptions',
+              type: 'array',
+              label: 'Registration Options',
+              fields: [
+                {
+                  name: 'optionName',
+                  type: 'text',
+                  label: 'Option Name',
+                  required: false,
+                },
+                {
+                  name: 'StartDate',
+                  type: 'date',
+                  label: 'Start Date',
+                  required: false,
+                  admin: {
+                    description: 'Date when this registration option becomes available.',
+                    date: { pickerAppearance: 'dayAndTime' },
+                  },
+                },
+                {
+                  name: 'EndDate',
+                  type: 'date',
+                  label: 'End Date',
+                  required: false,
+                  admin: {
+                    description: 'Date when this registration option ends.',
+                    date: { pickerAppearance: 'dayAndTime' },
+                  },
+                },
+                {
+                  name: 'participantLimit',
+                  type: 'number',
+                  label: 'Participant Limit',
+                  required: false,
+                },
+                {
+                  type: 'group',
+                  name: 'waitlist',
+                  label: 'Waitlist Options',
+                  fields: [
+                    {
+                      name: 'enableWaitlist',
+                      type: 'checkbox',
+                      label: 'Enable Waitlist',
+                      defaultValue: false,
+                    },
+                    {
+                      name: 'waitlistMessage',
+                      type: 'text',
+                      label: 'Waitlist Message',
+                      admin: { description: 'Message to inform users about waitlist position.' },
+                    },
+                  ],
+                },
+                {
+                  name: 'requireActiveMembership',
+                  type: 'checkbox',
+                  label: 'Require Active Membership',
+                  defaultValue: true,
+                },
+                {
+                  name: 'entryForm',
+                  type: 'richText',
+                  localized: true,
+                  required: true,
+                  label: false,
+                  editor: lexicalEditor({
+                    features: ({ rootFeatures }) => [
+                      ...rootFeatures,
+                      HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3'] }),
+                      BlocksFeature({
+                        blocks: [
+                          Banner,
+                          Code,
+                          MediaBlock,
+                          CallToAction,
+                          Content,
+                          Archive,
+                          FormBlock,
+                        ],
+                      }),
+                      FixedToolbarFeature(),
+                      InlineToolbarFeature(),
+                      HorizontalRuleFeature(),
+                    ],
+                  }),
+                },
+              ],
             },
           ],
         },
@@ -121,7 +256,7 @@ export const Events: CollectionConfig = {
               required: true,
               admin: { position: 'sidebar' },
             },
-                        {
+            {
               name: 'golfCourse',
               type: 'text',
               localized: true,
@@ -173,15 +308,53 @@ export const Events: CollectionConfig = {
             }),
           ],
         },
+        {
+          label: 'Additional Settings',
+          fields: [
+            {
+              type: 'group',
+              name: 'financial',
+              label: 'Financial Settings',
+              fields: [
+                {
+                  name: 'unearnedGLAccount',
+                  type: 'text',
+                  label: 'Unearned Revenue GL Account',
+                },
+              ],
+            },
+            {
+              // Refactored out into its own collection config
+              type: 'relationship',
+              name: 'eventTypes',
+              label: 'Event Types',
+              relationTo: 'event-types',
+              hasMany: true,
+            },
+            {
+              name: 'subType',
+              type: 'relationship',
+              relationTo: 'sub-types',
+              label: 'Sub Type',
+              filterOptions: ({ siblingData }) => {
+                // Assuming siblingData has the main event type reference (e.g., eventType)
+                // Return a filter that shows only sub-types whose eventType equals the selected value
+                return {
+                  eventType: {
+                    equals: (siblingData as any).eventType, // adjust field name as needed
+                  },
+                }
+              },
+            },
+          ],
+        },
       ],
     },
     {
       name: 'publishedAt',
       type: 'date',
       admin: {
-        date: {
-          pickerAppearance: 'dayAndTime',
-        },
+        date: { pickerAppearance: 'dayAndTime' },
         position: 'sidebar',
       },
       hooks: {
