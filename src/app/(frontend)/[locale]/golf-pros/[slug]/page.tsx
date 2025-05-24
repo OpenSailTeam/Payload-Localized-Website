@@ -9,22 +9,23 @@ import RichText from '@/components/RichText'
 
 import type { GolfPro } from '@/payload-types'
 
-import { LowImpactHero } from '@/heros/LowImpact'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { TypedLocale } from 'payload'
 import { routing } from '@/i18n/routing'
+import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { LowImpactHero } from '@/heros/LowImpact'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
-  const golfProsData = await payload.find({
+  const golfPros = await payload.find({
     collection: 'golf-pros',
     draft: false,
     limit: 1000,
     overrideAccess: false,
   })
 
-  return golfProsData.docs.flatMap(({ slug }) => 
+  return golfPros.docs.flatMap(({ slug }) => 
     routing.locales.map(locale => ({
       slug,
       locale
@@ -40,11 +41,12 @@ type Args = {
 }
 
 export default async function GolfPro({ params: paramsPromise }: Args) {
+  const { isEnabled: draft } = await draftMode()
   const { slug = '', locale = 'en' } = await paramsPromise
   const url = '/golf-pros/' + slug
-  const golfPros = await queryGolfPro({ slug, locale })
+  const golfPro = await queryGolfPro({ slug, locale })
 
-  if (!golfPros) return <PayloadRedirects url={url} />
+  if (!golfPro) return <PayloadRedirects url={url} />
 
   return (
     <article className="pt-16 pb-16">
@@ -53,15 +55,13 @@ export default async function GolfPro({ params: paramsPromise }: Args) {
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
+      {draft && <LivePreviewListener />}
+
       <LowImpactHero />
 
       <div className="flex flex-col items-center gap-4 pt-8">
-        <div className="container lg:mx-0 lg:grid lg:grid-cols-[1fr_48rem_1fr] grid-rows-[1fr]">
-          <RichText
-            className="lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[1fr]"
-            content={golfPros.description}
-            enableGutter={false}
-          />
+        <div className="container">
+          <RichText className="max-w-[48rem] mx-auto" data={golfPro.description} enableGutter={false} />
         </div>
       </div>
     </article>
@@ -70,14 +70,13 @@ export default async function GolfPro({ params: paramsPromise }: Args) {
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { slug = '', locale = 'en' } = await paramsPromise
-  const golfPros = await queryGolfPro({ slug, locale })
+  const golfPro = await queryGolfPro({ slug, locale })
 
-  return generateMeta({ doc: golfPros })
+  return generateMeta({ doc: golfPro })
 }
 
 const queryGolfPro = cache(async ({ slug, locale }: { slug: string; locale: TypedLocale }) => {
   const { isEnabled: draft } = await draftMode()
-
   const payload = await getPayload({ config: configPromise })
 
   const result = await payload.find({

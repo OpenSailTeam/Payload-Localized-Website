@@ -15,6 +15,7 @@ import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { TypedLocale } from 'payload'
 import { routing } from '@/i18n/routing'
+import { LivePreviewListener } from '@/components/LivePreviewListener'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -41,6 +42,7 @@ type Args = {
 }
 
 export default async function Post({ params: paramsPromise }: Args) {
+  const { isEnabled: draft } = await draftMode()
   const { slug = '', locale = 'en' } = await paramsPromise
   const url = '/posts/' + slug
   const post = await queryPost({ slug, locale })
@@ -54,23 +56,20 @@ export default async function Post({ params: paramsPromise }: Args) {
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
+      {draft && <LivePreviewListener />}
+
       <PostHero post={post} />
 
       <div className="flex flex-col items-center gap-4 pt-8">
-        <div className="container lg:mx-0 lg:grid lg:grid-cols-[1fr_48rem_1fr] grid-rows-[1fr]">
-          <RichText
-            className="lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[1fr]"
-            content={post.content}
-            enableGutter={false}
-          />
+        <div className="container">
+          <RichText className="max-w-[48rem] mx-auto" data={post.content} enableGutter={false} />
+          {post.relatedPosts && post.relatedPosts.length > 0 && (
+            <RelatedPosts
+              className="mt-12 max-w-[52rem] lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
+              docs={post.relatedPosts.filter((post) => typeof post === 'object')}
+            />
+          )}
         </div>
-
-        {post.relatedPosts && post.relatedPosts.length > 0 && (
-          <RelatedPosts
-            className="mt-12 max-w-[52rem] lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
-            docs={post.relatedPosts.filter((post) => typeof post === 'object')}
-          />
-        )}
       </div>
     </article>
   )

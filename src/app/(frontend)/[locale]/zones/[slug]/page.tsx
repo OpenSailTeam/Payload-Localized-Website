@@ -7,24 +7,26 @@ import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import RichText from '@/components/RichText'
 
-import type { Post } from '@/payload-types'
+import type { Zone } from '@/payload-types'
 
-import { ZoneHero } from '@/heros/ZoneHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { TypedLocale } from 'payload'
 import { routing } from '@/i18n/routing'
+import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { LowImpactHero } from '@/heros/LowImpact'
+import { ZoneHero } from '@/heros/ZoneHero'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
   const zones = await payload.find({
-    collection: 'posts',
+    collection: 'zones',
     draft: false,
     limit: 1000,
     overrideAccess: false,
   })
 
-  return zones.docs.flatMap(({ slug }) => 
+  return zones.docs.flatMap(({ slug }) =>
     routing.locales.map(locale => ({
       slug,
       locale
@@ -40,6 +42,7 @@ type Args = {
 }
 
 export default async function Zone({ params: paramsPromise }: Args) {
+  const { isEnabled: draft } = await draftMode()
   const { slug = '', locale = 'en' } = await paramsPromise
   const url = '/zones/' + slug
   const zone = await queryZone({ slug, locale })
@@ -53,15 +56,13 @@ export default async function Zone({ params: paramsPromise }: Args) {
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
+      {draft && <LivePreviewListener />}
+
       <ZoneHero zone={zone} />
 
       <div className="flex flex-col items-center gap-4 pt-8">
-        <div className="container lg:mx-0 lg:grid lg:grid-cols-[1fr_48rem_1fr] grid-rows-[1fr]">
-          <RichText
-            className="lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[1fr]"
-            content={zone.content}
-            enableGutter={false}
-          />
+        <div className="container">
+          <RichText className="max-w-[48rem] mx-auto" data={zone.content} enableGutter={false} />
         </div>
       </div>
     </article>
@@ -77,7 +78,6 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 
 const queryZone = cache(async ({ slug, locale }: { slug: string; locale: TypedLocale }) => {
   const { isEnabled: draft } = await draftMode()
-
   const payload = await getPayload({ config: configPromise })
 
   const result = await payload.find({

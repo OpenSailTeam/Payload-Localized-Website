@@ -44,7 +44,7 @@ export const EventHero: React.FC<{
             <div className="flex flex-col gap-4">
               {populatedOrganizers && (
                 <div className="flex flex-col gap-1">
-                  <p className="text-sm">{t('author')}</p>
+                  <p className="text-sm">{t('organizer')}</p>
                   {populatedOrganizers.map((author, index) => {
                     const { name } = author
 

@@ -57,7 +57,7 @@ export const ArchiveBlock: React.FC<ArchiveBlockProps & { locale: TypedLocale }>
     <div id={`block-${id}`} className="my-16">
       {introContent && (
         <div className="container mb-12 text-center sm:text-left">
-          <RichText content={introContent} enableGutter={false} />
+          <RichText data={introContent} enableGutter={false} />
         </div>
       )}
 
