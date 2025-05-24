@@ -30,6 +30,7 @@ import { EventTypes } from './collections/EventTypes'
 import { SubTypes } from './collections/SubTypes'
 import { Zones } from './collections/Zones'
 import { GolfPros } from './collections/GolfPros'
+import { Members } from './collections/Members'
 import Users from './collections/Users'
 import { seedHandler } from './endpoints/seedHandler'
 import { Footer } from './globals/Footer/config'
@@ -150,7 +151,7 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  collections: [Pages, Posts, Events, Zones, Media, Categories, Users, GolfPros, EventTypes, SubTypes],
+  collections: [Pages, Posts, Events, Zones, Media, Categories, Users, GolfPros, EventTypes, SubTypes, Members],
   cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   endpoints: [

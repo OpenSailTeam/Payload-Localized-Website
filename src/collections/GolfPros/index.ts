@@ -88,8 +88,10 @@ export const GolfPros: CollectionConfig = {
               editor: lexicalEditor({
                 features: ({ rootFeatures }) => [
                   ...rootFeatures,
-                  HeadingFeature({ enabledHeadingSizes: ['h1','h2','h3'] }),
-                  BlocksFeature({ blocks: [Banner, Code, MediaBlock, CallToAction, Content, Archive, FormBlock] }),
+                  HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3'] }),
+                  BlocksFeature({
+                    blocks: [Banner, Code, MediaBlock, CallToAction, Content, Archive, FormBlock],
+                  }),
                   FixedToolbarFeature(),
                   InlineToolbarFeature(),
                   HorizontalRuleFeature(),
@@ -123,6 +125,16 @@ export const GolfPros: CollectionConfig = {
               },
               hasMany: false,
               relationTo: 'zones',
+            },
+            {
+              name: 'member',
+              type: 'relationship',
+              relationTo: 'members',
+              hasMany: false,
+              required: true,
+              admin: {
+                description: 'Select the Member account this Golf Pro profile belongs to.',
+              },
             },
           ],
         },
@@ -177,6 +189,6 @@ export const GolfPros: CollectionConfig = {
   },
   labels: {
     singular: 'Golf Pro',
-    plural:   'Golf Pros',
+    plural: 'Golf Pros',
   },
 }
