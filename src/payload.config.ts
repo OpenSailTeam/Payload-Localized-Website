@@ -1,7 +1,8 @@
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
-import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { formBuilderPlugin, getPaymentTotal } from '@payloadcms/plugin-form-builder'
+import { stripePlugin } from '@payloadcms/plugin-stripe';
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
@@ -43,6 +44,7 @@ import localization from './i18n/localization'
 
 import { resendAdapter } from '@payloadcms/email-resend'
 import { TextSizeFeature } from "payload-lexical-typography";
+import Stripe from 'stripe';
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -56,6 +58,10 @@ const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
     ? `${process.env.NEXT_PUBLIC_SERVER_URL!}/${doc.slug}`
     : process.env.NEXT_PUBLIC_SERVER_URL!
 }
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2022-08-01',
+})
 
 export default buildConfig({
   admin: {
@@ -187,7 +193,48 @@ export default buildConfig({
       generateTitle,
       generateURL,
     }),
+    stripePlugin({
+      stripeSecretKey: process.env.STRIPE_SECRET_KEY!,
+      // Optionally specify your webhook secret here if you want Payload to verify events
+      // webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+    }),
     formBuilderPlugin({
+      fields: {
+        text: true,
+        email: true,
+        number: true,
+        textarea: true,
+        payment: true,
+      },
+      // Stripe logic
+      handlePayment: async ({ form, submissionData }) => {
+        // find the payment block in form schema
+        const paymentField = form.fields.find(f => f.blockType === 'payment')
+        if (!paymentField) return
+
+        // calculate the total in cents
+        const amount = getPaymentTotal({
+          basePrice: paymentField.basePrice,
+          priceConditions: paymentField.priceConditions,
+          fieldValues: submissionData,
+        })
+
+        // create a Stripe PaymentIntent
+        const intent = await stripe.paymentIntents.create({
+          amount,
+          currency: paymentField.currency || 'cad',
+          metadata: {
+            formID: form.slug,
+            submissionID: submissionData.id,
+          },
+        })
+
+        // return whatever you want to store on the submission (e.g. clientSecret)
+        return {
+          clientSecret: intent.client_secret,
+          paymentIntentId: intent.id,
+        }
+      },
       formOverrides: {
         fields: ({ defaultFields }) => {
           return defaultFields.map((field) => {

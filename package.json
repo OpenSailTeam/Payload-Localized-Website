@@ -32,6 +32,7 @@
     "@payloadcms/plugin-redirects": "^3.38.0",
     "@payloadcms/plugin-search": "^3.38.0",
     "@payloadcms/plugin-seo": "^3.38.0",
+    "@payloadcms/plugin-stripe": "3.38.0",
     "@payloadcms/richtext-lexical": "^3.38.0",
     "@payloadcms/ui": "^3.38.0",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -55,6 +56,7 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "7.45.4",
     "sharp": "0.33.0",
+    "stripe": "^18.1.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7"
   },

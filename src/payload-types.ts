@@ -836,6 +836,27 @@ export interface Form {
             name: string;
             label?: string | null;
             width?: number | null;
+            basePrice?: number | null;
+            priceConditions?:
+              | {
+                  fieldToUse?: string | null;
+                  condition?: ('hasValue' | 'equals' | 'notEquals') | null;
+                  valueForCondition?: string | null;
+                  operator?: ('add' | 'subtract' | 'multiply' | 'divide') | null;
+                  valueType?: ('static' | 'valueOfField') | null;
+                  valueForOperator?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'payment';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
             defaultValue?: string | null;
             placeholder?: string | null;
             options?:
@@ -1051,6 +1072,20 @@ export interface FormSubmission {
         id?: string | null;
       }[]
     | null;
+  payment?: {
+    field?: string | null;
+    status?: string | null;
+    /**
+     * Amount in cents
+     */
+    amount?: number | null;
+    paymentProcessor?: string | null;
+    creditCard?: {
+      token?: string | null;
+      brand?: string | null;
+      number?: string | null;
+    };
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1697,6 +1732,28 @@ export interface FormsSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        payment?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              basePrice?: T;
+              priceConditions?:
+                | T
+                | {
+                    fieldToUse?: T;
+                    condition?: T;
+                    valueForCondition?: T;
+                    operator?: T;
+                    valueType?: T;
+                    valueForOperator?: T;
+                    id?: T;
+                  };
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
         select?:
           | T
           | {
@@ -1784,6 +1841,21 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         field?: T;
         value?: T;
         id?: T;
+      };
+  payment?:
+    | T
+    | {
+        field?: T;
+        status?: T;
+        amount?: T;
+        paymentProcessor?: T;
+        creditCard?:
+          | T
+          | {
+              token?: T;
+              brand?: T;
+              number?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;
