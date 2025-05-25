@@ -2,7 +2,7 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { formBuilderPlugin, getPaymentTotal } from '@payloadcms/plugin-form-builder'
-import { stripePlugin } from '@payloadcms/plugin-stripe';
+import { stripePlugin } from '@payloadcms/plugin-stripe'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
@@ -31,6 +31,10 @@ import { SubTypes } from './collections/SubTypes'
 import { Zones } from './collections/Zones'
 import { GolfPros } from './collections/GolfPros'
 import { Members } from './collections/Members'
+import { Facilities } from './collections/Facilities'
+import { MembershipTypes } from './collections/MembershipTypes'
+import { Sponsors } from './collections/Sponsors'
+
 import Users from './collections/Users'
 import { seedHandler } from './endpoints/seedHandler'
 import { Footer } from './globals/Footer/config'
@@ -44,8 +48,9 @@ import { beforeSyncWithSearch } from '@/search/beforeSync'
 import localization from './i18n/localization'
 
 import { resendAdapter } from '@payloadcms/email-resend'
-import { TextSizeFeature } from "payload-lexical-typography";
-import Stripe from 'stripe';
+import { TextSizeFeature } from 'payload-lexical-typography'
+import Stripe from 'stripe'
+import { Registrations } from './collections/Registrations'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -107,18 +112,18 @@ export default buildConfig({
         ...defaultFeatures,
         TextSizeFeature({
           sizes: [
-            { value: "0.875rem", label: "Small" },
-            { value: "1rem",   label: "Normal" },
-            { value: "1.125rem", label: "Large (H3)" },
-            { value: "1.5rem",   label: "XL (H2)" },
-            { value: "3.5rem",   label: "XL (H1)" },
-            { value: "4rem",   label: "2XL" },
-            { value: "5rem",   label: "3XL" },
-            { value: "6rem",   label: "4XL" },
-            { value: "7rem",   label: "5XL" },
+            { value: '0.875rem', label: 'Small' },
+            { value: '1rem', label: 'Normal' },
+            { value: '1.125rem', label: 'Large (H3)' },
+            { value: '1.5rem', label: 'XL (H2)' },
+            { value: '3.5rem', label: 'XL (H1)' },
+            { value: '4rem', label: '2XL' },
+            { value: '5rem', label: '3XL' },
+            { value: '6rem', label: '4XL' },
+            { value: '7rem', label: '5XL' },
           ],
           scroll: false,
-          customSize: false,      // remove the “enter custom size” field
+          customSize: false, // remove the “enter custom size” field
         }),
         UnderlineFeature(),
         BoldFeature(),
@@ -151,7 +156,23 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  collections: [Pages, Posts, Events, Zones, Media, Categories, Users, GolfPros, EventTypes, SubTypes, Members],
+  collections: [
+    Pages,
+    Posts,
+    Events,
+    Zones,
+    Media,
+    Categories,
+    Users,
+    GolfPros,
+    EventTypes,
+    SubTypes,
+    Members,
+    Facilities,
+    MembershipTypes,
+    Sponsors,
+    Registrations,
+  ],
   cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   endpoints: [
@@ -208,31 +229,39 @@ export default buildConfig({
         payment: true,
       },
       // Stripe logic
-      handlePayment: async ({ form, submissionData }) => {
-        // find the payment block in form schema
-        const paymentField = form.fields.find(f => f.blockType === 'payment')
+      handlePayment: async ({ form, submissionData, payload }) => {
+        // 1. Ensure we have the full Form object
+        let fullForm = typeof form === 'string'
+          // fetch it if it’s just an ID
+          ? await payload.findByID({ collection: 'forms', id: form, depth: 1 })
+          : form
+
+        if (!fullForm) return
+
+        // 2. Find the payment field
+        const paymentField = fullForm.fields.find(f => f.blockType === 'payment')
         if (!paymentField) return
 
-        // calculate the total in cents
+        // 3. Calculate amount
         const amount = getPaymentTotal({
           basePrice: paymentField.basePrice,
           priceConditions: paymentField.priceConditions,
           fieldValues: submissionData,
         })
 
-        // create a Stripe PaymentIntent
+        // 4. Create Stripe intent
         const intent = await stripe.paymentIntents.create({
           amount,
-          currency: paymentField.currency || 'cad',
+          currency: paymentField.paymentProcessor?.currency || 'cad',
           metadata: {
-            formID: form.slug,
+            formID:    fullForm.id,
             submissionID: submissionData.id,
           },
         })
 
-        // return whatever you want to store on the submission (e.g. clientSecret)
+        // 5. Return whatever you want saved
         return {
-          clientSecret: intent.client_secret,
+          clientSecret:   intent.client_secret,
           paymentIntentId: intent.id,
         }
       },
@@ -255,6 +284,70 @@ export default buildConfig({
             }
             return field
           })
+        },
+      },
+      formSubmissionOverrides: {
+        fields: ({ defaultFields }) => defaultFields,
+        hooks: {
+          beforeChange: [
+            async ({ data }) => {
+              // 1. Enforce paymentDeadline
+              // The scheduler field in your form is typically named e.g. 'scheduledPaymentDate'
+              const schedField = data.submissionData.find(f => f.field === 'scheduledPaymentDate')
+              if (schedField) {
+                const scheduledDate = new Date(String(schedField.value))
+                const deadline = new Date(data.paymentDeadline)
+                if (scheduledDate > deadline) {
+                  throw new Error(`You must schedule payment on or before ${deadline.toLocaleDateString()}`)
+                }
+              }
+              return data
+            },
+          ],
+          afterChange: [
+            async ({ doc, req }) => {
+              // Only on new registrations
+              if (doc._status !== 'published') return
+
+              const optionId = doc.submissionData.find(f => f.field === 'optionId')?.value as string
+              const eventId  = doc.submissionData.find(f => f.field === 'eventId')?.value as string
+              if (!optionId || !eventId) return
+
+              // 2. Fetch the event to read participantLimit
+              const evt = await req.payload.findByID({
+                collection: 'events',
+                id: eventId,
+                depth: 2,
+              })
+              const opt = evt?.registrationOptions?.find(o => o.id === optionId)
+              const limit = opt?.participantLimit ?? Infinity
+
+              // 3. Count how many are already registered
+              const { totalDocs } = await req.payload.find({
+                collection: 'form-submissions',
+                where: ({
+                  submissionData: {
+                    elemMatch: {
+                      field: { equals: 'optionId' },
+                      value: { equals: optionId },
+                    }
+                  },
+                  status: { equals: 'registered' },
+                } as any),
+                overrideAccess: true,
+              })
+
+              // 4. Decide status
+              const newStatus = totalDocs < limit ? 'registered' : 'waitlisted'
+
+              // 5. Persist it back on this submission
+              await req.payload.update({
+                collection: 'form-submissions',
+                id: doc.id,
+                data: { status: newStatus } as any,
+              })
+            },
+          ],
         },
       },
     }),

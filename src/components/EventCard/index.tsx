@@ -16,9 +16,9 @@ export const EventCard: React.FC<ArchiveCardProps<Event>> = ({
 }) => {
   const {
     slug,
-    startDate,
-    endDate,
-    golfCourse,
+    dateStart,
+    dateEnd,
+    facility,
     location,
     zone,
     title,
@@ -29,15 +29,15 @@ export const EventCard: React.FC<ArchiveCardProps<Event>> = ({
 
   // format dates like "May 12 – 18, 2025"
   const formattedDate =
-    startDate && endDate
+    dateStart && dateEnd
       ? (() => {
           const opts: Intl.DateTimeFormatOptions = {
             month: 'short',
             day: 'numeric',
             year: 'numeric',
           }
-          const d1 = new Date(startDate).toLocaleDateString(undefined, opts)
-          const d2 = new Date(endDate).toLocaleDateString(undefined, opts)
+          const d1 = new Date(dateStart).toLocaleDateString(undefined, opts)
+          const d2 = new Date(dateEnd).toLocaleDateString(undefined, opts)
           const [m1, day1, year1] = d1.replace(',', '').split(' ')
           const [m2, day2, year2] = d2.replace(',', '').split(' ')
           if (m1 === m2 && year1 === year2) {
@@ -80,7 +80,7 @@ export const EventCard: React.FC<ArchiveCardProps<Event>> = ({
         <div className="flex items-end flex-grow">
           {formattedDate && (
             <time
-              dateTime={`${startDate}/${endDate}`}
+              dateTime={`${dateStart}/${dateEnd}`}
               className="w-full text-sm text-muted-foreground"
             >
               {formattedDate}
@@ -108,13 +108,13 @@ export const EventCard: React.FC<ArchiveCardProps<Event>> = ({
         </h3>
 
         <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-          {golfCourse && (
+          {facility && typeof facility !== 'string' && (
             <div className="flex items-center">
               <FlagTriangleRight
                 aria-hidden="true"
                 className="w-4 h-4 mr-2 text-muted-foreground"
               />
-              <span>{golfCourse}</span>
+              <span>{facility.title}</span>
             </div>
           )}
           {location && (

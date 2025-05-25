@@ -1,5 +1,7 @@
 {
   "date-published": "Date Published",
+  "date": "Date",
+  "facility": "Facility",
   "author": "Author",
   "organizer": "Organizer",
   "page-not-found": "This page could not be found.",

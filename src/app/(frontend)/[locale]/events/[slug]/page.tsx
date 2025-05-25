@@ -15,6 +15,7 @@ import PageClient from './page.client'
 import { TypedLocale } from 'payload'
 import { routing } from '@/i18n/routing'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import EventDetails from '@/components/EventDetails'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -25,11 +26,11 @@ export async function generateStaticParams() {
     overrideAccess: false,
   })
 
-  return events.docs.flatMap(({ slug }) => 
-    routing.locales.map(locale => ({
+  return events.docs.flatMap(({ slug }) =>
+    routing.locales.map((locale) => ({
       slug,
-      locale
-    }))
+      locale,
+    })),
   )
 }
 
@@ -59,11 +60,8 @@ export default async function Event({ params: paramsPromise }: Args) {
 
       <EventHero event={event} />
 
-      <div className="flex flex-col items-center gap-4 pt-8">
-        <div className="container">
-          <RichText className="max-w-[48rem] mx-auto" data={event.description} enableGutter={false} />
-        </div>
-      </div>
+      {/* Render the event details */}
+      <EventDetails event={event} />
     </article>
   )
 }
@@ -86,6 +84,7 @@ const queryEvent = cache(async ({ slug, locale }: { slug: string; locale: TypedL
     limit: 1,
     overrideAccess: draft,
     locale,
+    depth: 10,
     where: {
       slug: {
         equals: slug,

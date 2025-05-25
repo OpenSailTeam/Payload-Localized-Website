@@ -79,6 +79,10 @@ export interface Config {
     'event-types': EventType;
     'sub-types': SubType;
     members: Member;
+    facilities: Facility;
+    'membership-types': MembershipType;
+    sponsors: Sponsor;
+    registrations: Registration;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -104,6 +108,10 @@ export interface Config {
     'event-types': EventTypesSelect<false> | EventTypesSelect<true>;
     'sub-types': SubTypesSelect<false> | SubTypesSelect<true>;
     members: MembersSelect<false> | MembersSelect<true>;
+    facilities: FacilitiesSelect<false> | FacilitiesSelect<true>;
+    'membership-types': MembershipTypesSelect<false> | MembershipTypesSelect<true>;
+    sponsors: SponsorsSelect<false> | SponsorsSelect<true>;
+    registrations: RegistrationsSelect<false> | RegistrationsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -418,15 +426,13 @@ export interface User {
 export interface Event {
   id: string;
   title: string;
-  facility: string;
-  sponsors?:
-    | {
-        sponsor?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  duplicateEventSource?: (string | null) | Event;
+  facility: string | Facility;
+  location?: string | null;
+  sponsors?: (string | Sponsor)[] | null;
+  dateStart?: string | null;
+  dateEnd?: string | null;
   golfGeniusURL?: string | null;
+  zone?: (string | null) | Zone;
   description: {
     root: {
       type: string;
@@ -444,49 +450,53 @@ export interface Event {
   };
   registrationOptions?:
     | {
-        optionName?: string | null;
+        title: string;
+        participantType: 'individual' | 'team';
         /**
-         * Date when this registration option becomes available.
+         * Select the Form Builder form configured with early‑bird pricing & cutoff logic.
          */
-        StartDate?: string | null;
+        earlyBirdForm?: (string | null) | Form;
         /**
-         * Date when this registration option ends.
+         * Select the Form Builder form configured with regular pricing.
          */
-        EndDate?: string | null;
-        participantLimit?: number | null;
-        waitlist?: {
-          enableWaitlist?: boolean | null;
-          /**
-           * Message to inform users about waitlist position.
-           */
-          waitlistMessage?: string | null;
+        regularForm: string | Form;
+        /**
+         * Date after which the regular form should be shown instead of early‑bird.
+         */
+        earlyBirdCutoff?: string | null;
+        /**
+         * Members can pay at time of registration.
+         */
+        allowImmediatePayment?: boolean | null;
+        /**
+         * Members can choose a future date to schedule payment.
+         */
+        allowScheduledPayment?: boolean | null;
+        /**
+         * Latest date members may schedule or make a payment.
+         */
+        paymentDeadline?: string | null;
+        eligibility?: {
+          membershipTypes?: (string | MembershipType)[] | null;
+          zones?: (string | Zone)[] | null;
         };
-        requireActiveMembership?: boolean | null;
-        entryForm: {
-          root: {
-            type: string;
-            children: {
-              type: string;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        };
+        /**
+         * General ledger code for this registration option.
+         */
+        glCode?: string | null;
+        /**
+         * Maximum number of participants (individuals or teams).
+         */
+        participantLimit: number;
+        /**
+         * When limit is reached, additional submissions go to waitlist.
+         */
+        enableWaitlist?: boolean | null;
         id?: string | null;
+        blockName?: string | null;
+        blockType: 'registrationOption';
       }[]
     | null;
-  startDate: string;
-  endDate?: string | null;
-  location: string;
-  golfCourse: string;
-  relatedEvents?: (string | Event)[] | null;
-  categories?: (string | Category)[] | null;
-  zone?: (string | null) | Zone;
   meta?: {
     title?: string | null;
     /**
@@ -513,6 +523,285 @@ export interface Event {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "facilities".
+ */
+export interface Facility {
+  id: string;
+  title: string;
+  logo?: (string | null) | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
+  };
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sponsors".
+ */
+export interface Sponsor {
+  id: string;
+  title: string;
+  logo?: (string | null) | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
+  };
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forms".
+ */
+export interface Form {
+  id: string;
+  title: string;
+  fields?:
+    | (
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            defaultValue?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'checkbox';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'country';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'email';
+          }
+        | {
+            message?: {
+              root: {
+                type: string;
+                children: {
+                  type: string;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'message';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'number';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            basePrice?: number | null;
+            priceConditions?:
+              | {
+                  fieldToUse?: string | null;
+                  condition?: ('hasValue' | 'equals' | 'notEquals') | null;
+                  valueForCondition?: string | null;
+                  operator?: ('add' | 'subtract' | 'multiply' | 'divide') | null;
+                  valueType?: ('static' | 'valueOfField') | null;
+                  valueForOperator?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'payment';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            placeholder?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'select';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'state';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'text';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textarea';
+          }
+      )[]
+    | null;
+  submitButtonLabel?: string | null;
+  /**
+   * Choose whether to display an on-page message or redirect to a different page after they submit the form.
+   */
+  confirmationType?: ('message' | 'redirect') | null;
+  confirmationMessage?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  redirect?: {
+    url: string;
+  };
+  /**
+   * Send custom emails when the form submits. Use comma separated lists to send the same email to multiple recipients. To reference a value from this form, wrap that field's name with double curly brackets, i.e. {{firstName}}. You can use a wildcard {{*}} to output all data and {{*:table}} to format it as an HTML table in the email.
+   */
+  emails?:
+    | {
+        emailTo?: string | null;
+        cc?: string | null;
+        bcc?: string | null;
+        replyTo?: string | null;
+        emailFrom?: string | null;
+        subject: string;
+        /**
+         * Enter the message that should be sent in this email.
+         */
+        message?: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "membership-types".
+ */
+export interface MembershipType {
+  id: string;
+  typeName: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -796,201 +1085,6 @@ export interface FormBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "forms".
- */
-export interface Form {
-  id: string;
-  title: string;
-  fields?:
-    | (
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            defaultValue?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'checkbox';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'country';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'email';
-          }
-        | {
-            message?: {
-              root: {
-                type: string;
-                children: {
-                  type: string;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            } | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'message';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'number';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            basePrice?: number | null;
-            priceConditions?:
-              | {
-                  fieldToUse?: string | null;
-                  condition?: ('hasValue' | 'equals' | 'notEquals') | null;
-                  valueForCondition?: string | null;
-                  operator?: ('add' | 'subtract' | 'multiply' | 'divide') | null;
-                  valueType?: ('static' | 'valueOfField') | null;
-                  valueForOperator?: string | null;
-                  id?: string | null;
-                }[]
-              | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'payment';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            placeholder?: string | null;
-            options?:
-              | {
-                  label: string;
-                  value: string;
-                  id?: string | null;
-                }[]
-              | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'select';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'state';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'text';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'textarea';
-          }
-      )[]
-    | null;
-  submitButtonLabel?: string | null;
-  /**
-   * Choose whether to display an on-page message or redirect to a different page after they submit the form.
-   */
-  confirmationType?: ('message' | 'redirect') | null;
-  confirmationMessage?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  redirect?: {
-    url: string;
-  };
-  /**
-   * Send custom emails when the form submits. Use comma separated lists to send the same email to multiple recipients. To reference a value from this form, wrap that field's name with double curly brackets, i.e. {{firstName}}. You can use a wildcard {{*}} to output all data and {{*:table}} to format it as an HTML table in the email.
-   */
-  emails?:
-    | {
-        emailTo?: string | null;
-        cc?: string | null;
-        bcc?: string | null;
-        replyTo?: string | null;
-        emailFrom?: string | null;
-        subject: string;
-        /**
-         * Enter the message that should be sent in this email.
-         */
-        message?: {
-          root: {
-            type: string;
-            children: {
-              type: string;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "MultiBlock".
  */
 export interface MultiBlock {
@@ -1079,6 +1173,31 @@ export interface Member {
   loginAttempts?: number | null;
   lockUntil?: string | null;
   password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registrations".
+ */
+export interface Registration {
+  id: string;
+  event?: (string | null) | Event;
+  optionBlockID?: string | null;
+  user?: (string | null) | User;
+  formData?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  status?: ('registered' | 'waitlisted' | 'cancelled') | null;
+  invoice?: string | null;
+  paymentStatus?: ('pending' | 'paid' | 'refunded') | null;
+  scheduledPaymentDate?: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1242,6 +1361,22 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'members';
         value: string | Member;
+      } | null)
+    | ({
+        relationTo: 'facilities';
+        value: string | Facility;
+      } | null)
+    | ({
+        relationTo: 'membership-types';
+        value: string | MembershipType;
+      } | null)
+    | ({
+        relationTo: 'sponsors';
+        value: string | Sponsor;
+      } | null)
+    | ({
+        relationTo: 'registrations';
+        value: string | Registration;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1533,39 +1668,40 @@ export interface PostsSelect<T extends boolean = true> {
 export interface EventsSelect<T extends boolean = true> {
   title?: T;
   facility?: T;
-  sponsors?:
-    | T
-    | {
-        sponsor?: T;
-        id?: T;
-      };
-  duplicateEventSource?: T;
+  location?: T;
+  sponsors?: T;
+  dateStart?: T;
+  dateEnd?: T;
   golfGeniusURL?: T;
+  zone?: T;
   description?: T;
   registrationOptions?:
     | T
     | {
-        optionName?: T;
-        StartDate?: T;
-        EndDate?: T;
-        participantLimit?: T;
-        waitlist?:
+        registrationOption?:
           | T
           | {
+              title?: T;
+              participantType?: T;
+              earlyBirdForm?: T;
+              regularForm?: T;
+              earlyBirdCutoff?: T;
+              allowImmediatePayment?: T;
+              allowScheduledPayment?: T;
+              paymentDeadline?: T;
+              eligibility?:
+                | T
+                | {
+                    membershipTypes?: T;
+                    zones?: T;
+                  };
+              glCode?: T;
+              participantLimit?: T;
               enableWaitlist?: T;
-              waitlistMessage?: T;
+              id?: T;
+              blockName?: T;
             };
-        requireActiveMembership?: T;
-        entryForm?: T;
-        id?: T;
       };
-  startDate?: T;
-  endDate?: T;
-  location?: T;
-  golfCourse?: T;
-  relatedEvents?: T;
-  categories?: T;
-  zone?: T;
   meta?:
     | T
     | {
@@ -1753,6 +1889,73 @@ export interface MembersSelect<T extends boolean = true> {
   _verificationToken?: T;
   loginAttempts?: T;
   lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "facilities_select".
+ */
+export interface FacilitiesSelect<T extends boolean = true> {
+  title?: T;
+  logo?: T;
+  content?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "membership-types_select".
+ */
+export interface MembershipTypesSelect<T extends boolean = true> {
+  typeName?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sponsors_select".
+ */
+export interface SponsorsSelect<T extends boolean = true> {
+  title?: T;
+  logo?: T;
+  content?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registrations_select".
+ */
+export interface RegistrationsSelect<T extends boolean = true> {
+  event?: T;
+  optionBlockID?: T;
+  user?: T;
+  formData?: T;
+  status?: T;
+  invoice?: T;
+  paymentStatus?: T;
+  scheduledPaymentDate?: T;
+  createdAt?: T;
+  updatedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -11,6 +11,9 @@ import { buildInitialFormState } from './buildInitialFormState'
 import { fields } from './fields'
 import { useTranslations } from 'next-intl'
 
+import { Elements } from '@stripe/react-stripe-js'
+import { stripePromise } from '@/lib/stripe'
+
 export type Value = unknown
 
 export interface Property {
@@ -127,6 +130,7 @@ export const FormBlock: React.FC<
   )
 
   return (
+    <Elements stripe={stripePromise}>
     <div className="container lg:max-w-[48rem] pb-20">
       <FormProvider {...formMethods}>
         {enableIntro && introContent && !hasSubmitted && (
@@ -170,5 +174,6 @@ export const FormBlock: React.FC<
         )}
       </FormProvider>
     </div>
+    </Elements>
   )
 }

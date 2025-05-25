@@ -1,4 +1,4 @@
-// src/blocks/MultiBlock/config.ts
+
 import type { Block } from 'payload'
 import { Banner } from '../Banner/config'
 import { MediaBlock } from '../MediaBlock/config'
