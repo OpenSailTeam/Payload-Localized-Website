@@ -44,6 +44,7 @@ export const Archive: Block = {
         { label: 'Events', value: 'events' },
         { label: 'Zones',  value: 'zones'  },
         { label: 'Golf Pros',  value: 'golf-pros'  },
+        { label: 'Sponsors',  value: 'sponsors'  },
       ],
     },
     {

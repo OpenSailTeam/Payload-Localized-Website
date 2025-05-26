@@ -5,8 +5,6 @@ import React from 'react'
 import { FormBlock } from '@/blocks/Form/Component'
 import type { Form as FormType } from '@payloadcms/plugin-form-builder/types'
 import type { Event } from '@/payload-types'
-import { v4 as uuid } from 'uuid'
-
 
 export interface RegistrationOptionProps {
   option: Extract<
@@ -36,7 +34,6 @@ export default function RegistrationOption({
   return (
     <div className="p-6 border rounded-md">
       <h3 className="text-xl font-semibold mb-2">{option.title}</h3>
-      {/* Render the FormBlock you already have, passing in the form object */}
       <FormBlock
         enableIntro
         form={formConfig}

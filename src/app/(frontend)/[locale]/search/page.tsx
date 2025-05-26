@@ -73,7 +73,7 @@ export default async function Page({
       </div>
 
       {posts.totalDocs > 0 ? (
-        <CollectionArchive docs={posts.docs} relationTo={'posts'} />
+        <CollectionArchive docs={posts.docs} relationTo={'posts'} showArchiveLink={false} />
       ) : (
         <div className="container">No results found.</div>
       )}

@@ -23,7 +23,7 @@ export const CollectionArchive = <S extends CollectionSlug>({
   // Use t() to translate the registry label at render time.
   const { component: CardComponent } = Registry[relationTo]
   // Get translation or fallback to the static label
-  const translatedLabel = t(relationTo) || Registry[relationTo].label
+  const translatedLabel = t(relationTo as unknown as keyof IntlMessages) || Registry[relationTo].label
   const defaultLabel = `See all ${translatedLabel} →`
   const href = archiveUrl || `/${relationTo}`
 

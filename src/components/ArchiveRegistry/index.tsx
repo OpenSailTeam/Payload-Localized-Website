@@ -2,8 +2,9 @@ import { Card as PostCard } from '@/components/Card'
 import { EventCard } from '@/components/EventCard'
 import { ZoneCard } from '@/components/ZoneCard'
 import { GolfProCard } from '@/components/GolfProCard'
+import { SponsorCard } from '@/components/SponsorCard'
 
-export type CollectionSlug = 'posts' | 'events' | 'zones' | 'golf-pros'
+export type CollectionSlug = 'posts' | 'events' | 'zones' | 'golf-pros' | 'sponsors'
 
 export interface ArchiveCardProps<D = any> {
   doc: D
@@ -25,4 +26,5 @@ export const Registry: {
   events: { component: EventCard, label: 'events' },
   zones: { component: ZoneCard, label: 'zones' },
   'golf-pros': { component: GolfProCard, label: 'golf-pros' },
+  sponsors: { component: SponsorCard, label: 'golf-pros' },
 }

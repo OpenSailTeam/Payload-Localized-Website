@@ -7,6 +7,7 @@ import {
   HorizontalRuleFeature,
   InlineToolbarFeature,
   lexicalEditor,
+  EXPERIMENTAL_TableFeature
 } from '@payloadcms/richtext-lexical'
 
 import { authenticated } from '../../access/authenticated'
@@ -86,6 +87,9 @@ export const Events: CollectionConfig = {
             },
             { name: 'location', type: 'text' },
             { name: 'sponsors', type: 'relationship', relationTo: 'sponsors', hasMany: true },
+            { name: 'registrationDeadline', type: 'date' },
+            { name: 'participantCap', type: 'number' },
+            { name: 'participants', type: 'number' },
             { name: 'dateStart', type: 'date' },
             { name: 'dateEnd', type: 'date' },
             {
@@ -117,6 +121,7 @@ export const Events: CollectionConfig = {
                 features: ({ rootFeatures }) => [
                   ...rootFeatures,
                   HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3'] }),
+                  EXPERIMENTAL_TableFeature(),
                   BlocksFeature({
                     blocks: [Banner, Code, MediaBlock, CallToAction, Content, Archive, FormBlock],
                   }),

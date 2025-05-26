@@ -1,6 +1,7 @@
 // components/Form/Payment.tsx
 'use client'
 
+import { Label } from '@/components/ui/label'
 import React, { useState } from 'react'
 import { useFormContext, Controller } from 'react-hook-form'
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
@@ -50,13 +51,19 @@ const Payment: React.FC<PaymentProps> = ({
   }
 
   return (
-    <fieldset className="mb-6">
-      <legend>Payment</legend>
+    <fieldset className="mb-6 last:mb-0">
+      <Label htmlFor={name}>Payment</Label>
+      <p className="my-3 text-sm">
+        Total: ${basePrice.toFixed(2)}
+      </p>
+      <div className="my-3 p-2 border rounded">
       <Controller
         name={name}
         control={control}
         render={() => <CardElement />}
+        
       />
+      </div>
     </fieldset>
   )
 }

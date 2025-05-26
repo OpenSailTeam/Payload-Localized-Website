@@ -1,7 +1,11 @@
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
-import { formBuilderPlugin, getPaymentTotal } from '@payloadcms/plugin-form-builder'
+import {
+  formBuilderPlugin,
+  getPaymentTotal,
+  fields as formFields,
+} from '@payloadcms/plugin-form-builder'
 import { stripePlugin } from '@payloadcms/plugin-stripe'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
@@ -18,7 +22,7 @@ import {
 import sharp from 'sharp' // editor-import
 import { UnderlineFeature } from '@payloadcms/richtext-lexical'
 import path from 'path'
-import { buildConfig } from 'payload'
+import { Block, buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 
 import Categories from './collections/Categories'
@@ -68,6 +72,39 @@ const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2022-08-01',
 })
+
+// 1) Create a helper to extend any block with a `description` sub‑field
+function extendWithDescription(base: Block): Block {
+  return {
+    ...base,
+    fields: [
+      // keep all existing sub‑fields
+      ...(base.fields ?? []),
+      // add your optional description
+      {
+        name: 'description',
+        type: 'text',
+        required: false,
+        admin: {
+          description: 'Optional helper text shown under the label',
+        },
+      },
+    ],
+  };
+}
+
+// 2) Build the `fields` object by transforming every entry in formFields
+const extendedFormFields = Object.fromEntries(
+  Object.entries(formFields).map(([slug, maybeBlock]) => {
+    // if it were ever a factory, call it; otherwise just use the object
+    const base: Block =
+      typeof maybeBlock === 'function'
+        ? (maybeBlock as () => Block)()
+        : maybeBlock;
+
+    return [slug, extendWithDescription(base)];
+  }),
+) as Record<string, Block>;
 
 export default buildConfig({
   admin: {
@@ -209,7 +246,7 @@ export default buildConfig({
       },
     }),
     nestedDocsPlugin({
-      collections: ['categories', 'event-types', 'sub-types'],
+      collections: ['categories', 'event-types', 'sub-types', 'pages'],
     }),
     seoPlugin({
       generateTitle,
@@ -222,24 +259,21 @@ export default buildConfig({
     }),
     formBuilderPlugin({
       fields: {
-        text: true,
-        email: true,
-        number: true,
-        textarea: true,
-        payment: true,
+        ...extendedFormFields,
       },
       // Stripe logic
       handlePayment: async ({ form, submissionData, payload }) => {
         // 1. Ensure we have the full Form object
-        let fullForm = typeof form === 'string'
-          // fetch it if it’s just an ID
-          ? await payload.findByID({ collection: 'forms', id: form, depth: 1 })
-          : form
+        let fullForm =
+          typeof form === 'string'
+            ? // fetch it if it’s just an ID
+              await payload.findByID({ collection: 'forms', id: form, depth: 1 })
+            : form
 
         if (!fullForm) return
 
         // 2. Find the payment field
-        const paymentField = fullForm.fields.find(f => f.blockType === 'payment')
+        const paymentField = fullForm.fields.find((f) => f.blockType === 'payment')
         if (!paymentField) return
 
         // 3. Calculate amount
@@ -254,14 +288,14 @@ export default buildConfig({
           amount,
           currency: paymentField.paymentProcessor?.currency || 'cad',
           metadata: {
-            formID:    fullForm.id,
+            formID: fullForm.id,
             submissionID: submissionData.id,
           },
         })
 
         // 5. Return whatever you want saved
         return {
-          clientSecret:   intent.client_secret,
+          clientSecret: intent.client_secret,
           paymentIntentId: intent.id,
         }
       },
@@ -293,12 +327,14 @@ export default buildConfig({
             async ({ data }) => {
               // 1. Enforce paymentDeadline
               // The scheduler field in your form is typically named e.g. 'scheduledPaymentDate'
-              const schedField = data.submissionData.find(f => f.field === 'scheduledPaymentDate')
+              const schedField = data.submissionData.find((f) => f.field === 'scheduledPaymentDate')
               if (schedField) {
                 const scheduledDate = new Date(String(schedField.value))
                 const deadline = new Date(data.paymentDeadline)
                 if (scheduledDate > deadline) {
-                  throw new Error(`You must schedule payment on or before ${deadline.toLocaleDateString()}`)
+                  throw new Error(
+                    `You must schedule payment on or before ${deadline.toLocaleDateString()}`,
+                  )
                 }
               }
               return data
@@ -309,8 +345,9 @@ export default buildConfig({
               // Only on new registrations
               if (doc._status !== 'published') return
 
-              const optionId = doc.submissionData.find(f => f.field === 'optionId')?.value as string
-              const eventId  = doc.submissionData.find(f => f.field === 'eventId')?.value as string
+              const optionId = doc.submissionData.find((f) => f.field === 'optionId')
+                ?.value as string
+              const eventId = doc.submissionData.find((f) => f.field === 'eventId')?.value as string
               if (!optionId || !eventId) return
 
               // 2. Fetch the event to read participantLimit
@@ -319,21 +356,21 @@ export default buildConfig({
                 id: eventId,
                 depth: 2,
               })
-              const opt = evt?.registrationOptions?.find(o => o.id === optionId)
+              const opt = evt?.registrationOptions?.find((o) => o.id === optionId)
               const limit = opt?.participantLimit ?? Infinity
 
               // 3. Count how many are already registered
               const { totalDocs } = await req.payload.find({
                 collection: 'form-submissions',
-                where: ({
+                where: {
                   submissionData: {
                     elemMatch: {
                       field: { equals: 'optionId' },
                       value: { equals: optionId },
-                    }
+                    },
                   },
                   status: { equals: 'registered' },
-                } as any),
+                } as any,
                 overrideAccess: true,
               })
 

@@ -5,6 +5,7 @@ import { cn } from '@/utilities/cn'
 import type { Zone } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { ArchiveCardProps } from '../ArchiveRegistry'
+import { MapPin } from 'lucide-react'
 
 export const ZoneCard: React.FC<ArchiveCardProps<Zone>> = ({
   doc,
@@ -12,7 +13,7 @@ export const ZoneCard: React.FC<ArchiveCardProps<Zone>> = ({
   title: titleOverride,
   className,
 }) => {
-  const { slug, meta, title, logo } = doc || {}
+  const { slug, meta, title, logo, region } = doc || {}
   const { description, image: metaImage } = meta || {}
 
   const titleToUse = titleOverride || title || 'Untitled zone'
@@ -60,12 +61,10 @@ export const ZoneCard: React.FC<ArchiveCardProps<Zone>> = ({
           {titleToUse}
         </h3>
 
-        {/* Excerpt */}
-        {excerpt && (
-          <p className="text-sm text-muted-foreground flex-grow">
-            {excerpt}
-          </p>
-        )}
+        <div className="flex flex-row gap-1.5 p-2 bg-muted rounded-lg">
+            <MapPin aria-hidden="true" className="w-4 h-4 mt-0.5 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">{region}</p>
+          </div>
       </div>
 
       {/* Explore link visually hidden for screen readers */}

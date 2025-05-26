@@ -13,6 +13,7 @@ export const EventHero: React.FC<{
     dateStart,
     dateEnd,
     facility,
+    location,
     golfGeniusURL,
     zone,
     sponsors,
@@ -20,6 +21,9 @@ export const EventHero: React.FC<{
     populatedOrganizers,
     publishedAt,
     title,
+    participantCap,
+    participants,
+    registrationDeadline,
   } = event
   const t = useTranslations()
 
@@ -43,6 +47,16 @@ export const EventHero: React.FC<{
         })()
       : ''
 
+  const formattedRegistrationDeadline =
+    registrationDeadline ? (() => {
+      const opts: Intl.DateTimeFormatOptions = {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      }
+      return new Date(registrationDeadline).toLocaleDateString(undefined, opts)
+    })() : ''
+
   return (
     <div className="relative -mt-[10.4rem] flex items-end">
       <div className="container z-10 relative lg:grid lg:grid-cols-[1fr_48rem_1fr] text-white pb-8">
@@ -65,11 +79,34 @@ export const EventHero: React.FC<{
                 <p>{facility.title}</p>
               </div>
             )}
+            {location && (
+              <div className="flex flex-col gap-1">
+                <p className="text-sm">{t('facility')}</p>
+
+                <p>{location}</p>
+              </div>
+            )}
             {zone && typeof zone !== 'string' && (
               <div className="flex flex-col gap-1">
                 <p className="text-sm">{t('zone')}</p>
 
                 <p>{zone.title}</p>
+              </div>
+            )}
+            {registrationDeadline && (
+              <div className="flex flex-col gap-1">
+                <p className="text-sm">{`Registration Deadline`}</p>
+
+                <time dateTime={`${registrationDeadline}`}>{formattedRegistrationDeadline}</time>
+              </div>
+            )}
+            {participantCap && participants && (
+              <div className="flex flex-col gap-1">
+                <p className="text-sm">{`Participants`}</p>
+
+                <p>
+                  {participants}/{participantCap}
+                </p>
               </div>
             )}
           </div>

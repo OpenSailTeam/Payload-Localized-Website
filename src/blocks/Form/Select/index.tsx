@@ -17,6 +17,7 @@ import { Width } from '../Width'
 
 export const Select: React.FC<
   SelectField & {
+    description?: string;
     control: Control<FieldValues, any>
     errors: Partial<
       FieldErrorsImpl<{
@@ -24,10 +25,11 @@ export const Select: React.FC<
       }>
     >
   }
-> = ({ name, control, errors, label, options, required, width }) => {
+> = ({ name, control, errors, label, options, required, width, description }) => {
   return (
     <Width width={width}>
       <Label htmlFor={name}>{label}</Label>
+      {description && <p className="my-3 text-sm">{description}</p>}
       <Controller
         control={control}
         defaultValue=""

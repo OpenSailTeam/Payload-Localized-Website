@@ -56,7 +56,7 @@ export default async function Page({ params: paramsPromise }: Args) {
         />
       </div>
 
-      <CollectionArchive docs={zones.docs} relationTo={'posts'} />
+      <CollectionArchive docs={zones.docs} relationTo={'posts'} showArchiveLink={false} />
 
       <div className="container">
         {zones.totalPages > 1 && zones.page && (

@@ -24,7 +24,7 @@ export default async function Page({ params }: Args) {
   const payload = await getPayload({ config: configPromise })
 
   const golfPros = await payload.find({
-    collection: 'golf-pros', // changed from 'zones'
+    collection: 'golf-pros',
     locale,
     depth: 1,
     limit: 12,
@@ -36,20 +36,20 @@ export default async function Page({ params }: Args) {
       <PageClient />
       <div className="container mb-16">
         <div className="prose dark:prose-invert max-w-none">
-          <h1>{t('golf-pros')}</h1> {/* changed from 'zones' */}
+          <h1>{t('golf-pros')}</h1>
         </div>
       </div>
 
       <div className="container mb-8">
         <PageRange
-          collection="golf-pros" // changed from 'zones'
+          collection="golf-pros" 
           currentPage={golfPros.page}
           limit={12}
           totalDocs={golfPros.totalDocs}
         />
       </div>
 
-      <CollectionArchive docs={golfPros.docs} relationTo={'golf-pros'} /> {/* changed from 'zones' */}
+      <CollectionArchive docs={golfPros.docs} relationTo={'golf-pros'} showArchiveLink={false} /> 
 
       <div className="container">
         {golfPros.totalPages > 1 && golfPros.page && (
@@ -62,6 +62,6 @@ export default async function Page({ params }: Args) {
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Payload Website Template Golf Pros`, // changed from Zones
+    title: `Payload Website Template Golf Pros`,
   }
 }

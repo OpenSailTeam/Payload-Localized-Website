@@ -259,6 +259,15 @@ export interface Page {
   publishedAt?: string | null;
   slug?: string | null;
   slugLock?: boolean | null;
+  parent?: (string | null) | Page;
+  breadcrumbs?:
+    | {
+        doc?: (string | null) | Page;
+        url?: string | null;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -429,6 +438,9 @@ export interface Event {
   facility: string | Facility;
   location?: string | null;
   sponsors?: (string | Sponsor)[] | null;
+  registrationDeadline?: string | null;
+  participantCap?: number | null;
+  participants?: number | null;
   dateStart?: string | null;
   dateEnd?: string | null;
   golfGeniusURL?: string | null;
@@ -532,6 +544,7 @@ export interface Facility {
   id: string;
   title: string;
   logo?: (string | null) | Media;
+  website: string;
   content: {
     root: {
       type: string;
@@ -569,6 +582,7 @@ export interface Sponsor {
   id: string;
   title: string;
   logo?: (string | null) | Media;
+  website: string;
   content: {
     root: {
       type: string;
@@ -613,6 +627,10 @@ export interface Form {
             width?: number | null;
             required?: boolean | null;
             defaultValue?: boolean | null;
+            /**
+             * Optional helper text shown under the label
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'checkbox';
@@ -622,6 +640,10 @@ export interface Form {
             label?: string | null;
             width?: number | null;
             required?: boolean | null;
+            /**
+             * Optional helper text shown under the label
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'country';
@@ -631,6 +653,10 @@ export interface Form {
             label?: string | null;
             width?: number | null;
             required?: boolean | null;
+            /**
+             * Optional helper text shown under the label
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'email';
@@ -651,6 +677,10 @@ export interface Form {
               };
               [k: string]: unknown;
             } | null;
+            /**
+             * Optional helper text shown under the label
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'message';
@@ -661,6 +691,10 @@ export interface Form {
             width?: number | null;
             defaultValue?: number | null;
             required?: boolean | null;
+            /**
+             * Optional helper text shown under the label
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'number';
@@ -700,6 +734,10 @@ export interface Form {
                 }[]
               | null;
             required?: boolean | null;
+            /**
+             * Optional helper text shown under the label
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'select';
@@ -709,6 +747,10 @@ export interface Form {
             label?: string | null;
             width?: number | null;
             required?: boolean | null;
+            /**
+             * Optional helper text shown under the label
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'state';
@@ -719,6 +761,10 @@ export interface Form {
             width?: number | null;
             defaultValue?: string | null;
             required?: boolean | null;
+            /**
+             * Optional helper text shown under the label
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'text';
@@ -729,9 +775,34 @@ export interface Form {
             width?: number | null;
             defaultValue?: string | null;
             required?: boolean | null;
+            /**
+             * Optional helper text shown under the label
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'textarea';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            /**
+             * Optional helper text shown under the label
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'radio';
           }
       )[]
     | null;
@@ -1025,7 +1096,7 @@ export interface ArchiveBlock {
     [k: string]: unknown;
   } | null;
   populateBy?: ('collection' | 'selection') | null;
-  relationTo?: ('posts' | 'events' | 'zones' | 'golf-pros') | null;
+  relationTo?: ('posts' | 'events' | 'zones' | 'golf-pros' | 'sponsors') | null;
   categories?: (string | Category)[] | null;
   limit?: number | null;
   selectedDocs?:
@@ -1496,6 +1567,15 @@ export interface PagesSelect<T extends boolean = true> {
   publishedAt?: T;
   slug?: T;
   slugLock?: T;
+  parent?: T;
+  breadcrumbs?:
+    | T
+    | {
+        doc?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1670,6 +1750,9 @@ export interface EventsSelect<T extends boolean = true> {
   facility?: T;
   location?: T;
   sponsors?: T;
+  registrationDeadline?: T;
+  participantCap?: T;
+  participants?: T;
   dateStart?: T;
   dateEnd?: T;
   golfGeniusURL?: T;
@@ -1897,6 +1980,7 @@ export interface MembersSelect<T extends boolean = true> {
 export interface FacilitiesSelect<T extends boolean = true> {
   title?: T;
   logo?: T;
+  website?: T;
   content?: T;
   meta?:
     | T
@@ -1927,6 +2011,7 @@ export interface MembershipTypesSelect<T extends boolean = true> {
 export interface SponsorsSelect<T extends boolean = true> {
   title?: T;
   logo?: T;
+  website?: T;
   content?: T;
   meta?:
     | T
@@ -1990,6 +2075,7 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               required?: T;
               defaultValue?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -2000,6 +2086,7 @@ export interface FormsSelect<T extends boolean = true> {
               label?: T;
               width?: T;
               required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -2010,6 +2097,7 @@ export interface FormsSelect<T extends boolean = true> {
               label?: T;
               width?: T;
               required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -2017,6 +2105,7 @@ export interface FormsSelect<T extends boolean = true> {
           | T
           | {
               message?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -2028,6 +2117,7 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               defaultValue?: T;
               required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -2069,6 +2159,7 @@ export interface FormsSelect<T extends boolean = true> {
                     id?: T;
                   };
               required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -2079,6 +2170,7 @@ export interface FormsSelect<T extends boolean = true> {
               label?: T;
               width?: T;
               required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -2090,6 +2182,7 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               defaultValue?: T;
               required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -2101,6 +2194,26 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               defaultValue?: T;
               required?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        radio?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };

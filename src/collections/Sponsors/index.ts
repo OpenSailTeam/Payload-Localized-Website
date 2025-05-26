@@ -80,6 +80,11 @@ export const Sponsors: CollectionConfig = {
               admin: { position: 'sidebar' },
             },
             {
+              name: 'website',
+              type: 'text',
+              required: true,
+            },
+            {
               name: 'content',
               type: 'richText',
               localized: true,
@@ -88,8 +93,10 @@ export const Sponsors: CollectionConfig = {
               editor: lexicalEditor({
                 features: ({ rootFeatures }) => [
                   ...rootFeatures,
-                  HeadingFeature({ enabledHeadingSizes: ['h1','h2','h3'] }),
-                  BlocksFeature({ blocks: [Banner, Code, MediaBlock, CallToAction, Content, Archive, FormBlock] }),
+                  HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3'] }),
+                  BlocksFeature({
+                    blocks: [Banner, Code, MediaBlock, CallToAction, Content, Archive, FormBlock],
+                  }),
                   FixedToolbarFeature(),
                   InlineToolbarFeature(),
                   HorizontalRuleFeature(),
