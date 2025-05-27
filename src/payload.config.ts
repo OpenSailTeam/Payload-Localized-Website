@@ -344,6 +344,8 @@ export default buildConfig({
           ],
           afterChange: [
             async ({ doc, req }) => {
+              if (!req?.payload) return
+              
               // Only on new registrations
               if (doc._status !== 'published') return
 
