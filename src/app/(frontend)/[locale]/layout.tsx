@@ -22,6 +22,7 @@ import { routing } from '@/i18n/routing'
 import { notFound } from 'next/navigation'
 import localization from '@/i18n/localization'
 
+
 type Args = {
   children: React.ReactNode
   params: Promise<{
