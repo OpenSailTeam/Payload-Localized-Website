@@ -399,6 +399,7 @@ export default buildConfig({
         },
       },
     }),
+    payloadCloudPlugin(),
     s3Storage({
       collections: {
         media: true,
@@ -412,7 +413,6 @@ export default buildConfig({
         region: process.env.S3_REGION,
       },
     }),
-  payloadCloudPlugin(),
   ],
   localization,
   email: resendAdapter({
