@@ -16,13 +16,13 @@ export const Logo = (props: Props) => {
   return (
     /* eslint-disable @next/next/no-img-element */
     <img
-      alt="Payload Logo"
-      width={193}
-      height={34}
+      alt="PGA of Canada Logo"
+      width={90}
+      height={60}
       loading={loading}
       fetchPriority={priority}
       decoding="async"
-      className={clsx('max-w-[9.375rem] w-full h-[34px]', className)}
+      className={clsx('max-w-[9.375rem] w-full h-[50px]', className)}
       src="https://files.pgaofcanada.com/files/ui/logos/pga.svg"
     />
   )

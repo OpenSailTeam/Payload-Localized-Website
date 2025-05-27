@@ -133,7 +133,7 @@ export const FormBlock: React.FC<
 
   return (
     <Elements stripe={stripePromise}>
-      <div className="lg:max-w-[48rem] pb-5">
+      <div className="lg:max-w-[48rem] pb-5 mx-auto">
         <FormProvider {...formMethods}>
           {enableIntro && introContent && !hasSubmitted && (
             // check solution

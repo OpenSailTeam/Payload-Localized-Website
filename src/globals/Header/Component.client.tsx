@@ -29,7 +29,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
   return (
     <div className="bg-background">
       <header
-        className="container relative z-20 flex justify-end gap-2 py-8"
+        className="container relative z-20 flex justify-end gap-2 py-2"
         {...(theme ? { 'data-theme': theme } : {})}
       >
         <Link href="/" className="me-auto">
