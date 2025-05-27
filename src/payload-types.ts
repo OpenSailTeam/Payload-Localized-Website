@@ -1202,7 +1202,7 @@ export interface GolfPro {
   /**
    * Select the Member account this Golf Pro profile belongs to.
    */
-  member: string | Member;
+  member?: (string | null) | Member;
   meta?: {
     title?: string | null;
     /**
