@@ -131,7 +131,7 @@ export const GolfPros: CollectionConfig = {
               type: 'relationship',
               relationTo: 'members',
               hasMany: false,
-              required: true,
+              required: false,
               admin: {
                 description: 'Select the Member account this Golf Pro profile belongs to.',
               },
