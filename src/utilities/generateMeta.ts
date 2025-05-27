@@ -27,7 +27,7 @@ export const generateMeta = async (args: { doc: Page | Post | Event | GolfPro })
               url: ogImage,
             },
           ]
-        : undefined,
+        : [],
       title,
       url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
     }),
