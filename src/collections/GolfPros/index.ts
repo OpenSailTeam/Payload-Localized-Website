@@ -179,7 +179,7 @@ export const GolfPros: CollectionConfig = {
         ],
       },
     },
-    ...slugField('title', { slugOverrides: { localized: true } }),
+    ...slugField('name', { slugOverrides: { localized: true } }),
   ],
   versions: {
     drafts: {
