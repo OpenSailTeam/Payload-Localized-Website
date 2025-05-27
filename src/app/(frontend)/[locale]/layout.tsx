@@ -31,7 +31,7 @@ type Args = {
 
 export default async function RootLayout({ children, params }: Args) {
   const { locale } = await params
-  const currentLocale = localization.locales.find((loc) => loc.code === locale)
+  const currentLocale = localization.locales.find((loc) => loc.code === locale) as { code: string; label: string; rtl?: boolean }
   const direction = currentLocale?.rtl ? 'rtl' : 'ltr'
 
   if (!routing.locales.includes(locale as any)) {
